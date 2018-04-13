@@ -1,0 +1,26 @@
+# User-specific stuff:
+.idea
+
+# IntelliJ
+out/
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+
+## Gradle template
+.gradle/
+!gradle-wrapper.jar
+.gradletasknamecache
+gradle/wrapper/gradle-wrapper.properties
+gradlew
+gradlew.bat
+gradle/
+build/
+
+.DS_Store

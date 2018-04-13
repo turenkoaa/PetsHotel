@@ -1,0 +1,14 @@
+server:
+  port: 8200
+
+spring:
+  application:
+    name: pethotel
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/studio
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: admin
