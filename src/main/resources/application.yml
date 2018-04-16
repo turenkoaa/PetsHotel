@@ -8,7 +8,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     generate-ddl: false
   datasource:
-    url: jdbc:mysql://localhost:3306/studio
+    url: jdbc:mysql://localhost:3306/pet_hotel?useUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: admin
+
+flyway:
+  locations: classpath:db/migration
+  encoding: UTF-8
