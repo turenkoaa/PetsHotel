@@ -20,11 +20,11 @@ public class Response {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "request_request_id", nullable = false)
+    @JoinColumn(name = "request_id", nullable = false)
     private Request request;
 
     @NotNull

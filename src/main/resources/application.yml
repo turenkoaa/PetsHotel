@@ -7,6 +7,8 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     generate-ddl: false
+    hibernate:
+      use-new-id-generator-mappings: false
   datasource:
     url: jdbc:mysql://localhost:3306/pet_hotel?useUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver

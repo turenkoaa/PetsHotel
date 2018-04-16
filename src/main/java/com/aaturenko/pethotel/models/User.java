@@ -20,16 +20,18 @@ public class User {
     private Long id;
 
     @NotNull
-    public String firstName;
+    private String firstName;
 
     @NotNull
-    public String lastName;
+    private String lastName;
 
-    public Boolean active;
+    @NotNull
+    private String email;
+
+    private Boolean active;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type")
     private UserType userType;
 
     @NotNull

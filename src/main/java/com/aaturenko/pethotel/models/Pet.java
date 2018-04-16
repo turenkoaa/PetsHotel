@@ -17,11 +17,11 @@ public class Pet{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
+    @Column(name = "pet_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 
     @NotNull
