@@ -4,8 +4,6 @@ import com.aaturenko.pethotel.enums.UserType;
 import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
 import com.aaturenko.pethotel.exceptions.UniqueNameException;
 import com.aaturenko.pethotel.models.User;
-import com.aaturenko.pethotel.repositories.UserRepository;
-import com.aaturenko.pethotel.services.utils.InitEntities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static com.aaturenko.pethotel.services.utils.InitEntities.createNewExampleUser;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -21,16 +20,13 @@ import static org.junit.Assert.*;
 public class UserServiceTest {
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    UserRepository userRepository;
+    private UserService userService;
 
     private User savedUser;
 
     @Before
     public void initDb() {
-        savedUser = userService.saveOrUpdateUser(InitEntities.createNewExampleUser());
+        savedUser = userService.saveOrUpdateUser(createNewExampleUser.get());
     }
 
     @After
@@ -63,7 +59,7 @@ public class UserServiceTest {
 
     @Test(expected = UniqueNameException.class)
     public void userWithExistingEmailFailed () {
-        userService.saveOrUpdateUser(InitEntities.createNewExampleUser());
+        userService.saveOrUpdateUser(createNewExampleUser.get());
     }
 
 

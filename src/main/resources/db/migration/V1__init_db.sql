@@ -66,24 +66,39 @@ CREATE TABLE IF NOT EXISTS `request` (
   `end_date` DATE NOT NULL,
   `status` ENUM('NEW', 'SOLVED', 'ANULLED') NOT NULL DEFAULT 'NEW',
   `user_id` BIGINT NOT NULL,
-  `pet_pet_id` BIGINT NOT NULL,
   PRIMARY KEY (`request_id`),
   CONSTRAINT `fk_request_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_request_pet1`
-    FOREIGN KEY (`pet_pet_id`)
-    REFERENCES `pet` (`pet_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE )
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_request_user1_idx` ON `request` (`user_id` ASC);
 
-CREATE INDEX `fk_request_pet1_idx` ON `request` (`pet_pet_id` ASC);
+-- -----------------------------------------------------
+-- Table `pet_request`
+-- -----------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `pet_request` (
+  `pet_id` BIGINT NOT NULL,
+  `request_id` BIGINT NOT NULL,
+  PRIMARY KEY (`pet_id`, `request_id`),
+  CONSTRAINT `fk_pet_request_request1`
+  FOREIGN KEY (`request_id`)
+  REFERENCES `request` (`request_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE ,
+  CONSTRAINT `fk_pet_request_pet1`
+  FOREIGN KEY (`pet_id`)
+  REFERENCES `pet` (`pet_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE INDEX `fk_pet_request_request1` ON `pet_request` (`request_id` ASC);
+
+CREATE INDEX `fk_pet_request_pet1` ON `pet_request` (`pet_id` ASC);
 
 -- -----------------------------------------------------
 -- Table `response`

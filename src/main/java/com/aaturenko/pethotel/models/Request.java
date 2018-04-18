@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,30 +22,36 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "request_id")
-    private Long id;
+    private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Instant startDate;
+    private LocalDate startDate;
 
-
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Instant endDate;
+    private LocalDate endDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
-    @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true)
+    @JoinTable(
+            name="pet_request",
+            joinColumns=@JoinColumn(name="request_id", referencedColumnName="request_id"),
+            inverseJoinColumns=@JoinColumn(name="pet_id", referencedColumnName="pet_id", unique=true))
     private Set<Pet> pets = new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "request", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private Set<Response> responses = new HashSet<>();
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "request", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//    private Set<Response> responses = new HashSet<>();
 
+    public boolean addPet(Pet pet) {
+        return pets.add(pet);
+    }
 }

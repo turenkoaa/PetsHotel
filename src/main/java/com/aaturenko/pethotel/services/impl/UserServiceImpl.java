@@ -11,11 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 
     @Override
     public User findUserById(long id) {
@@ -48,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(long id) {
+        //todo set reject to new responses for user requests
         userRepository.deleteById(id);
     }
 }

@@ -17,7 +17,7 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "response_id")
-    private Long id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

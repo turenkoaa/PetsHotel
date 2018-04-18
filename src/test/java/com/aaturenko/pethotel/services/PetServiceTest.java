@@ -17,9 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.Matchers.hasSize;
+import static com.aaturenko.pethotel.services.utils.InitEntities.createNewExamplePet;
+import static com.aaturenko.pethotel.services.utils.InitEntities.createNewExampleUser;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -27,26 +27,20 @@ import static org.junit.Assert.assertTrue;
 public class PetServiceTest {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PetService petService;
-
-    @Autowired
-    PetRepository petRepository;
-
+    private PetService petService;
 
     private Pet savedPet;
     private User savedUser;
 
     @Before
     public void initDb() {
-        savedUser = userService.saveOrUpdateUser(InitEntities.createNewExampleUser());
+        savedUser = userService.saveOrUpdateUser(createNewExampleUser.get());
         savedPet = petService.saveOrUpdatePet(
-                InitEntities.createNewExamplePet().setOwner(savedUser)
+                createNewExamplePet.get()
+                        .setOwner(savedUser)
         );
     }
 
@@ -80,6 +74,6 @@ public class PetServiceTest {
 
     @Test(expected = UniqueNameException.class)
     public void petWithExistingPasswordFailed () {
-        petService.saveOrUpdatePet(InitEntities.createNewExamplePet());
+        petService.saveOrUpdatePet(createNewExamplePet.get());
     }
 }

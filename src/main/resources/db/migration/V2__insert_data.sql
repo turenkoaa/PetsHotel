@@ -32,12 +32,22 @@ COMMIT;
 -- Data for table `request`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `pet_pet_id`) VALUES (1, '2018-05-12', '2018-05-25', DEFAULT, 1, 1);
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `pet_pet_id`) VALUES (2, '2018-06-1', '2018-06-5', DEFAULT, 2, 3);
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `pet_pet_id`) VALUES (3, '2016-06-1', '2016-07-1', 'ANULLED', 5, 4);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`) VALUES (1, '2018-05-12', '2018-05-25', DEFAULT, 1);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`) VALUES (2, '2018-06-1', '2018-06-5', DEFAULT, 2);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`) VALUES (3, '2016-06-1', '2016-07-1', 'ANULLED', 5);
 
 COMMIT;
 
+-- -----------------------------------------------------
+-- Data for table `pet_request`
+-- -----------------------------------------------------
+
+START TRANSACTION;
+INSERT INTO `pet_request` (`request_id`, `pet_id`) VALUES (1, 1);
+INSERT INTO `pet_request` (`request_id`, `pet_id`) VALUES (2, 3);
+INSERT INTO `pet_request` (`request_id`, `pet_id`) VALUES (3, 4);
+
+COMMIT;
 
 -- -----------------------------------------------------
 -- Data for table `response`
