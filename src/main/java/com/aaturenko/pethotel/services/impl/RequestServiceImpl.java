@@ -9,6 +9,7 @@ import com.aaturenko.pethotel.models.Request;
 import com.aaturenko.pethotel.models.Response;
 import com.aaturenko.pethotel.models.User;
 import com.aaturenko.pethotel.repositories.RequestRepository;
+import com.aaturenko.pethotel.services.ManageStatusesService;
 import com.aaturenko.pethotel.services.PetService;
 import com.aaturenko.pethotel.services.RequestService;
 import com.aaturenko.pethotel.services.ResponseService;
@@ -32,11 +33,9 @@ import java.util.function.Function;
 @Service
 public class RequestServiceImpl implements RequestService {
 
-    @Autowired
-    private RequestRepository requestRepository;
-
+    private final RequestRepository requestRepository;
     private final PetService petService;
-//    private final ResponseService responseService;
+    private final ManageStatusesService manageStatusesService;
 
     @Override
     public Request createRequest(RequestDto request) {
@@ -86,29 +85,12 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public void deleteRequestById(long id) {
-        throw new UnsupportedOperationException("It is not able to delete request else.");
+        Request request = findRequestById(id);
+        manageStatusesService.manageStatusesForRequestRemoving(request);
+        // todo mark as deleted
+        requestRepository.delete(request);
     }
 
-    @Override
-    @Transactional
-    public Request solvedRequestById(long requestId) {
-        return changeStatus.apply(requestId, RequestStatus.SOLVED);
-    }
-
-    @Override
-    public Request setNewStatusForRequestById(long requestId) {
-        return changeStatus.apply(requestId, RequestStatus.SOLVED);
-    }
-
-    @Override
-    @Transactional
-    public Request anulledRequestByIdAndRejectItsResponses(long requestId) {
-//        responseService.rejectAllResponsesForRequestId(requestId);
-        return changeStatus.apply(requestId, RequestStatus.ANULLED);
-    }
-
-    private BiFunction<Long, RequestStatus, Request> changeStatus =
-            (id, status) -> requestRepository.save(findRequestById(id).setStatus(status));
 
 
     private BiFunction<RequestDto, List<Pet>, Request> mapFromDto = (dto, pets) -> {
@@ -116,7 +98,8 @@ public class RequestServiceImpl implements RequestService {
                 .setStartDate(dto.getStartDate())
                 .setEndDate(dto.getEndDate())
                 .setUser(pets.get(0).getOwner())
-                .setStatus(RequestStatus.NEW);
+                .setStatus(RequestStatus.NEW)
+                .setCost(dto.getCost());
         request.getPets().addAll(pets);
         return request;
     };

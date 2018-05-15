@@ -9,4 +9,5 @@ public class RequestDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private List<Long> petsIds;
+    private int cost;
 }

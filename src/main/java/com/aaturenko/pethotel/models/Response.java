@@ -32,6 +32,6 @@ public class Response {
     private ResponseStatus status;
 
     private String details;
-
+    private int cost;
 
 }

@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `request` (
   `end_date` DATE NOT NULL,
   `status` ENUM('NEW', 'SOLVED', 'ANULLED') NOT NULL DEFAULT 'NEW',
   `user_id` BIGINT NOT NULL,
+  `cost` INT NULL,
   PRIMARY KEY (`request_id`),
   CONSTRAINT `fk_request_user1`
     FOREIGN KEY (`user_id`)
@@ -105,10 +106,11 @@ CREATE INDEX `fk_pet_request_pet1` ON `pet_request` (`pet_id` ASC);
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `response` (
   `response_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `status` ENUM('PROPOSED', 'ASSIGN', 'REJECT') NOT NULL DEFAULT 'PROPOSED',
+  `status` ENUM('PROPOSED', 'ACCEPTED', 'REJECTED') NOT NULL DEFAULT 'PROPOSED',
   `details` VARCHAR(250) NULL,
   `request_id` BIGINT NOT NULL,
   `user_id` BIGINT NOT NULL,
+  `cost` INT NULL,
   PRIMARY KEY (`response_id`),
   CONSTRAINT `fk_response_request1`
     FOREIGN KEY (`request_id`)

@@ -6,4 +6,7 @@ public enum UserType {
     BOTH,
     ADMIN;
 
+    // active
+    // blocked
+    // admin
 }

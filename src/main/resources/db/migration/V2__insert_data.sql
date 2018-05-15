@@ -32,9 +32,9 @@ COMMIT;
 -- Data for table `request`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`) VALUES (1, '2018-05-12', '2018-05-25', DEFAULT, 1);
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`) VALUES (2, '2018-06-1', '2018-06-5', DEFAULT, 2);
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`) VALUES (3, '2016-06-1', '2016-07-1', 'ANULLED', 5);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `cost`) VALUES (1, '2018-05-12', '2018-05-25', DEFAULT, 1, 300);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `cost`) VALUES (2, '2018-06-1', '2018-06-5', DEFAULT, 2, 1200);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `cost`) VALUES (3, '2016-06-1', '2016-07-1', 'ANULLED', 5, 2000);
 
 COMMIT;
 
@@ -53,8 +53,8 @@ COMMIT;
 -- Data for table `response`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`) VALUES (1, DEFAULT, NULL, 1, 4);
-INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`) VALUES (2, DEFAULT, NULL, 2, 5);
-INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`) VALUES (3, 'REJECT', NULL, 3, 6);
+INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`, `cost`) VALUES (1, DEFAULT, NULL, 1, 4, 400);
+INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`, `cost`) VALUES (2, DEFAULT, NULL, 2, 5, 1000);
+INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`, `cost`) VALUES (3, 'REJECTED', NULL, 3, 6, 1800);
 
 COMMIT;

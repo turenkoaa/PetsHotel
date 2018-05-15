@@ -10,27 +10,21 @@ import com.aaturenko.pethotel.repositories.ResponseRepository;
 import com.aaturenko.pethotel.services.RequestService;
 import com.aaturenko.pethotel.services.ResponseService;
 import com.aaturenko.pethotel.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.function.BiFunction;
 
-import static java.util.stream.Collectors.toList;
-
+@RequiredArgsConstructor
 @Service
 public class ResponseServiceImpl implements ResponseService {
 
-    @Autowired
-    private ResponseRepository responseRepository;
-
-    @Autowired
-    private RequestService requestService;
-
-    @Autowired
-    private UserService userService;
+    private final ResponseRepository responseRepository;
+    private final RequestService requestService;
+    private final UserService userService;
+    private final ManageStatusesServiceImpl statusesManageService;
 
     @Override
     public Response createResponse(ResponseDto responseDto) {
@@ -44,7 +38,8 @@ public class ResponseServiceImpl implements ResponseService {
                 .setRequest(request)
                 .setUser(user)
                 .setStatus(ResponseStatus.PROPOSED)
-                .setDetails(responseDto.getDetails());
+                .setDetails(responseDto.getDetails())
+                .setCost(responseDto.getCost());
     }
 
     @Override
@@ -54,7 +49,7 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public List<Response> findAllByUserId(long userId, int page, int size) {
+    public List<Response> findAllResponsesByUserId(long userId, int page, int size) {
         return responseRepository.findAllByUser_Id(userId, PageRequest.of(page, size)).getContent();
     }
 
@@ -65,60 +60,11 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     @Transactional
-    public Response acceptResponseById(long responseId) {
-        Response response = changeStatus.apply(responseId, ResponseStatus.ACCEPTED);
-        long requestId = response.getRequest().getId();
-
-        requestService.solvedRequestById(requestId);
-
-        rejectResponsesByIds(
-                responseRepository.findAllByRequest_Id(requestId)
-                        .stream()
-                        .map(Response::getId)
-                        .filter(id -> !id.equals(responseId))
-                        .collect(toList())
-        );
-
-        return response;
-    }
-
-    @Override
-    @Transactional
     public void deleteResponseById(long responseId) {
         Response response = findResponseById(responseId);
-
-        if (ResponseStatus.ACCEPTED.equals(response.getStatus())) {
-            long requestId = response.getRequest().getId();
-            requestService.setNewStatusForRequestById(requestId);
-            rejectAllResponsesForRequestId(requestId);
-        }
-
+        statusesManageService.manageStatusesForResponseRemoving(response);
+        // todo mark as deleted
         responseRepository.delete(response);
     }
 
-    @Override
-    @Transactional
-    public void rejectAllResponsesForRequestId(long requestId) {
-        rejectResponsesByIds(
-                responseRepository.findAllByRequest_Id(requestId)
-                        .stream()
-                        .map(Response::getId)
-                        .collect(toList())
-        );
-    }
-
-    @Override
-    @Transactional
-    public Response rejectResponseById(long responseId) {
-        return changeStatus.apply(responseId, ResponseStatus.REJECTED);
-    }
-
-    private void rejectResponsesByIds(List<Long> ids) {
-        responseRepository.updateResponsesStatus(ResponseStatus.REJECTED, ids);
-    }
-
-    private BiFunction<Long, ResponseStatus, Response> changeStatus =
-            (id, status) -> responseRepository.save(
-                    findResponseById(id).setStatus(status)
-            );
 }

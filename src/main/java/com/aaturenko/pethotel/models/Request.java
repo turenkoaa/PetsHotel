@@ -47,6 +47,8 @@ public class Request {
             inverseJoinColumns=@JoinColumn(name="pet_id", referencedColumnName="pet_id", unique=true))
     private Set<Pet> pets = new HashSet<>();
 
+    private int cost;
+
 //    @JsonIgnore
 //    @OneToMany(mappedBy = "request", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 //    private Set<Response> responses = new HashSet<>();

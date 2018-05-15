@@ -33,6 +33,7 @@ public class InitEntities {
     public static Supplier<RequestDto> createNewExampleRequestDto =
         () -> new RequestDto()
             .setStartDate(LocalDate.of(2018, 06, 02))
-            .setEndDate(LocalDate.of(2018, 07, 13));
+            .setEndDate(LocalDate.of(2018, 07, 13))
+            .setCost(2000);
 
 }

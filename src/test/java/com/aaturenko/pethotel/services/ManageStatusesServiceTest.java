@@ -1,8 +1,6 @@
 package com.aaturenko.pethotel.services;
 
 import com.aaturenko.pethotel.dto.ResponseDto;
-import com.aaturenko.pethotel.enums.RequestStatus;
-import com.aaturenko.pethotel.enums.ResponseStatus;
 import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
 import com.aaturenko.pethotel.models.Response;
 import org.junit.After;
@@ -13,20 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 import static com.aaturenko.pethotel.enums.RequestStatus.NEW;
 import static com.aaturenko.pethotel.enums.RequestStatus.SOLVED;
 import static com.aaturenko.pethotel.enums.ResponseStatus.ACCEPTED;
 import static com.aaturenko.pethotel.enums.ResponseStatus.PROPOSED;
 import static com.aaturenko.pethotel.enums.ResponseStatus.REJECTED;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ResponseServiceTest {
+public class ManageStatusesServiceTest {
 
     private Response response;
     private long requestId = 1L;
@@ -37,6 +32,9 @@ public class ResponseServiceTest {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private ManageStatusesService manageStatusesService;
 
     @Before
     public void initDb() {
@@ -57,31 +55,21 @@ public class ResponseServiceTest {
     }
 
     @Test
-    public void savedResponseSuccessfully() {
-        assertEquals(sitterId, response.getUser().getId());
-        assertEquals(ResponseStatus.PROPOSED, response.getStatus());
-        assertNull(response.getDetails());
-    }
-
-    @Test(expected = EntityNotFoundException.class)
-    public void notFoundResponse() {
-        responseService.findResponseById(9999999L);
+    public void successfullyAcceptResponse() {
+        long id = response.getId();
+        manageStatusesService.acceptResponseById(id);
+        assertThat(requestService.findRequestById(requestId).getStatus(), is(SOLVED));
+        assertThat(responseService.findResponseById(1L).getStatus(), is(REJECTED));
+        assertThat(responseService.findResponseById(id).getStatus(), is(ACCEPTED));
     }
 
     @Test
-    public void successfullyFoundResponse() {
-        responseService.findResponseById(response.getId());
-    }
+    public void successfullyDeleteResponse() {
+        long id = response.getId();
+        manageStatusesService.acceptResponseById(id);
+        responseService.deleteResponseById(id);
 
-    @Test
-    public void successfullyFoundAllResponsesByUserId() {
-        List<Response> responses = responseService.findAllResponsesByUserId(sitterId, 0, 5);
-        assertThat(responses, hasSize(2));
-    }
-
-    @Test
-    public void successfullyFoundAllResponsesByRequestId() {
-        List<Response> responses = responseService.findAllResponsesByRequestId(requestId, 0, 5);
-        assertThat(responses, hasSize(2));
+        assertThat(requestService.findRequestById(requestId).getStatus(), is(NEW));
+        assertThat(responseService.findResponseById(1L).getStatus(), is(PROPOSED));
     }
 }

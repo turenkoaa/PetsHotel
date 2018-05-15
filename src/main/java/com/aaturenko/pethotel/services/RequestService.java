@@ -11,7 +11,4 @@ public interface RequestService {
     void deleteRequestById(long id);
     List<Request> findAllNewRequests(int page, int size);
     List<Request> findAllRequestsByAuthor(long userId, int page, int size);
-    Request solvedRequestById(long requestId);
-    Request setNewStatusForRequestById(long requestId);
-    Request anulledRequestByIdAndRejectItsResponses(long requestId);
 }
