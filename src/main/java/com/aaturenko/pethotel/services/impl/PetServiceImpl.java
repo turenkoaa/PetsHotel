@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -47,8 +48,13 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<Pet> findPetByOwnerId(long ownerId) {
-        return petRepository.findByOwner_Id(ownerId);
+    public List<Pet> findAllById(List<Long> ids, int page, int size) {
+        return petRepository.findAllById(ids, PageRequest.of(page, size)).getContent();
+    }
+
+    @Override
+    public List<Pet> findPetsByOwnerId(long ownerId, int page, int size) {
+        return petRepository.findAllByOwner_Id(ownerId, PageRequest.of(page, size)).getContent();
     }
 
     @Override

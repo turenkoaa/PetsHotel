@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
     Page<Request> findAllByStatusAndEndDateGreaterThanOrderByStartDate(RequestStatus requestStatus, LocalDate date, Pageable pageRequest);
     Page<Request> findAllByUser_IdOrderByStartDate(long userId, Pageable pageRequest);
+    List<Request> findAllByUser_Id(long userId);
 }

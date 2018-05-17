@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface ResponseRepository extends JpaRepository<Response, Long> {
     Page<Response> findAllByUser_Id(long userId, Pageable pageable);
+    List<Response> findAllByUser_Id(long userId);
     Page<Response> findAllByRequest_Id(long requestId, Pageable pageable);
     List<Response> findAllByRequest_Id(long requestId);
 

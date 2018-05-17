@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.aaturenko.pethotel.services.utils.InitEntities.createNewExampleUser;
+import static com.aaturenko.pethotel.services.utils.EntitiesFactory.createNewExampleUser;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -39,12 +39,13 @@ public class UserServiceTest {
         //check saving
         Long savedUserId = savedUser.getId();
         assertTrue(savedUserId > 0);
-        assertEquals(savedUser.getUserType(), UserType.OWNER);
+        assertEquals(savedUser.getUserType(), UserType.CUSTOMER);
 
         //updating and finding
-        savedUser.setUserType(UserType.BOTH);
+        String address = "something else";
+        savedUser.setAddress(address);
         userService.saveOrUpdateUser(savedUser);
-        assertEquals(userService.findUserById(savedUserId).getUserType(), UserType.BOTH);
+        assertEquals(userService.findUserById(savedUserId).getAddress(), address);
     }
 
     @Test(expected = EntityNotFoundException.class)

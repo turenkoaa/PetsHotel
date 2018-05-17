@@ -1,13 +1,9 @@
 package com.aaturenko.pethotel.services;
 
-import com.aaturenko.pethotel.enums.UserType;
 import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
 import com.aaturenko.pethotel.exceptions.UniqueNameException;
 import com.aaturenko.pethotel.models.Pet;
 import com.aaturenko.pethotel.models.User;
-import com.aaturenko.pethotel.repositories.PetRepository;
-import com.aaturenko.pethotel.repositories.UserRepository;
-import com.aaturenko.pethotel.services.utils.InitEntities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,10 +11,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import static com.aaturenko.pethotel.services.utils.InitEntities.createNewExamplePet;
-import static com.aaturenko.pethotel.services.utils.InitEntities.createNewExampleUser;
+import static com.aaturenko.pethotel.services.utils.EntitiesFactory.createNewExamplePet;
+import static com.aaturenko.pethotel.services.utils.EntitiesFactory.createNewExampleUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -69,7 +64,7 @@ public class PetServiceTest {
 
     @Test
     public void petNotFoundByOwner () {
-        assertTrue(petService.findPetByOwnerId(9999999999999L).isEmpty());
+        assertTrue(petService.findPetsByOwnerId(9999999999999L, 0, 2).isEmpty());
     }
 
     @Test(expected = UniqueNameException.class)

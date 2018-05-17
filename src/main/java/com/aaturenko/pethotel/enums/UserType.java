@@ -1,12 +1,6 @@
 package com.aaturenko.pethotel.enums;
 
 public enum UserType {
-    OWNER,
-    SITTER,
-    BOTH,
+    CUSTOMER,
     ADMIN;
-
-    // active
-    // blocked
-    // admin
 }

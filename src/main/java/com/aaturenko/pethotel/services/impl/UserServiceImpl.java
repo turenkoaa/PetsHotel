@@ -4,21 +4,25 @@ import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
 import com.aaturenko.pethotel.exceptions.UniqueNameException;
 import com.aaturenko.pethotel.models.User;
 import com.aaturenko.pethotel.repositories.UserRepository;
+import com.aaturenko.pethotel.services.ManageStatusesService;
 import com.aaturenko.pethotel.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ManageStatusesService manageStatusesService;
 
     @Override
     public List<User> findAll(int page, int size) {
@@ -42,7 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveOrUpdateUser(User user) {
         try {
-            return userRepository.save(user);
+            return userRepository.save(validateUserBeforeSaving(user));
         } catch (DataIntegrityViolationException | ConstraintViolationException e) {
             String email = user.getEmail();
             if (userRepository.findByEmail(email).isPresent())
@@ -54,9 +58,23 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private User validateUserBeforeSaving(User user) {
+        userRepository.findById(user.getId()).ifPresent(
+                oldUser -> {
+                    if (!user.getActive().equals(oldUser.getActive()))
+                        throw new UnsupportedOperationException(
+                                "There is no available for users except admins to modify their active status.");
+                    if (!user.getUserType().equals(oldUser.getUserType()))
+                        throw new UnsupportedOperationException("There is no available to modify user type.");
+                }
+        );
+
+        return user;
+    }
+
     @Override
-    public void deleteUserById(long id) {
-        //todo set reject to new responses for user requests
-        userRepository.deleteById(id);
+    public void deleteUserById(long userId) {
+        manageStatusesService.manageStatusesForUserRemoving(userId);
+        userRepository.deleteById(userId);
     }
 }

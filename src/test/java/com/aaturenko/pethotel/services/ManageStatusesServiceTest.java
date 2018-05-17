@@ -56,18 +56,16 @@ public class ManageStatusesServiceTest {
 
     @Test
     public void successfullyAcceptResponse() {
-        long id = response.getId();
-        manageStatusesService.acceptResponseById(id);
+        manageStatusesService.acceptResponse(response);
         assertThat(requestService.findRequestById(requestId).getStatus(), is(SOLVED));
         assertThat(responseService.findResponseById(1L).getStatus(), is(REJECTED));
-        assertThat(responseService.findResponseById(id).getStatus(), is(ACCEPTED));
+        assertThat(responseService.findResponseById(response.getId()).getStatus(), is(ACCEPTED));
     }
 
     @Test
     public void successfullyDeleteResponse() {
-        long id = response.getId();
-        manageStatusesService.acceptResponseById(id);
-        responseService.deleteResponseById(id);
+        manageStatusesService.acceptResponse(response);
+        responseService.deleteResponseById(response.getId());
 
         assertThat(requestService.findRequestById(requestId).getStatus(), is(NEW));
         assertThat(responseService.findResponseById(1L).getStatus(), is(PROPOSED));

@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.function.Supplier;
 
-public class InitEntities {
+public class EntitiesFactory {
 
     public static Supplier<User> createNewExampleUser =
             () -> new User()
                 .setFirstName("Сомин")
                 .setLastName("Игорь")
                 .setActive(true)
-                .setUserType(UserType.OWNER)
+                .setUserType(UserType.CUSTOMER)
                 .setEmail("somin@smth.com")
                 .setAddress("Новочеркасская");
 
