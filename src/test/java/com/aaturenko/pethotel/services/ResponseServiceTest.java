@@ -24,9 +24,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class ResponseServiceTest {
+public class ResponseServiceTest extends DatabaseTest {
 
     private Response response;
     private long requestId = 1L;

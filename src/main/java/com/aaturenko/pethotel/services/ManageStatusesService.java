@@ -2,8 +2,6 @@ package com.aaturenko.pethotel.services;
 
 import com.aaturenko.pethotel.models.Request;
 import com.aaturenko.pethotel.models.Response;
-import com.aaturenko.pethotel.models.User;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface ManageStatusesService {
     void manageStatusesForResponseRemoving(Response response);

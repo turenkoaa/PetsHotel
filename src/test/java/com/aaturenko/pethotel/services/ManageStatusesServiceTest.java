@@ -19,9 +19,7 @@ import static com.aaturenko.pethotel.enums.ResponseStatus.REJECTED;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class ManageStatusesServiceTest {
+public class ManageStatusesServiceTest extends DatabaseTest {
 
     private Response response;
     private long requestId = 1L;

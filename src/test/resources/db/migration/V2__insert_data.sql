@@ -1,4 +1,4 @@
-USE `pet_hotel`;
+USE `pet_hotel_test`;
 SET NAMES utf8;
 
 -- -----------------------------------------------------

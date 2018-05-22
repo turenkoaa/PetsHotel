@@ -23,9 +23,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class RequestServiceTest {
+public class RequestServiceTest extends DatabaseTest{
 
     @Autowired
     private UserService userService;

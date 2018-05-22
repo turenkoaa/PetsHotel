@@ -23,6 +23,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional
     public void activateUser(long userId) {
         userRepository.updateUserActiveStatus(userId, true);
     }

@@ -17,9 +17,7 @@ import static com.aaturenko.pethotel.services.utils.EntitiesFactory.createNewExa
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class PetServiceTest {
+public class PetServiceTest extends DatabaseTest{
 
     @Autowired
     private UserService userService;

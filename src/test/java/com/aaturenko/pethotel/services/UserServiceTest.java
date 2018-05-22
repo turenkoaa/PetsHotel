@@ -15,9 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static com.aaturenko.pethotel.services.utils.EntitiesFactory.createNewExampleUser;
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class UserServiceTest {
+public class UserServiceTest extends DatabaseTest {
 
     @Autowired
     private UserService userService;

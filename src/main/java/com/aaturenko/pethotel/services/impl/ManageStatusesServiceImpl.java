@@ -68,8 +68,8 @@ public class ManageStatusesServiceImpl implements ManageStatusesService {
                 .filter(r -> !REJECTED.equals(r.getStatus()))
                 .peek(this::validateBeforeResponseRejection)
                 .map(Response::getId)
-                .collect(toList());;
-        responseRepository.updateResponsesStatus(REJECTED, ids);
+                .collect(toList());
+        if (!ids.isEmpty()) responseRepository.updateResponsesStatus(REJECTED, ids);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ManageStatusesServiceImpl implements ManageStatusesService {
                 .filter(r -> !status.equals(r.getStatus()))
                 .map(Response::getId)
                 .collect(toList());
-        responseRepository.updateResponsesStatus(status, ids);
+        if (!ids.isEmpty()) responseRepository.updateResponsesStatus(status, ids);
     }
 
 }
