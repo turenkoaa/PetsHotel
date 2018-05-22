@@ -24,7 +24,7 @@ public class ResponseController {
     private final ManageStatusesService manageStatusesService;
 
     @GetMapping("/all-by-request/{requestId}")
-    public ResponseEntity<List<Response>> findResponses(
+    public ResponseEntity<List<Response>> findResponsesForRequest(
             @PathVariable long requestId,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size) {
