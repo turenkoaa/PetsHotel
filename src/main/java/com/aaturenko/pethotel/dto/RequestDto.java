@@ -2,23 +2,19 @@ package com.aaturenko.pethotel.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class RequestDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private List<Long> petsIds;
     private int cost;
-
-    private RequestDto(LocalDate startDate, LocalDate endDate, List<Long> petsIds, int cost) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.petsIds = petsIds;
-        this.cost = cost;
-    }
 
     public static RequestDtoBuilder builder() {
         return new RequestDtoBuilder();
@@ -30,8 +26,7 @@ public class RequestDto {
         private List<Long> petsIds;
         private int cost;
 
-        RequestDtoBuilder() {
-        }
+        RequestDtoBuilder() {}
 
         public RequestDtoBuilder startDate(LocalDate startDate) {
             this.startDate = startDate;

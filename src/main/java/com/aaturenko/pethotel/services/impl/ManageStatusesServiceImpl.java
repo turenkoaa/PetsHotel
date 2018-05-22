@@ -43,7 +43,7 @@ public class ManageStatusesServiceImpl implements ManageStatusesService {
                 .collect(toList());
 
         changeResponseStatus(response, ResponseStatus.ACCEPTED);
-        responseRepository.updateResponsesStatus(REJECTED, ids);
+        if (!ids.isEmpty()) responseRepository.updateResponsesStatus(REJECTED, ids);
 
     }
 

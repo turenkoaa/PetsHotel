@@ -30,7 +30,7 @@ public class PetServiceImpl implements PetService {
             if (petRepository.findByPassport(passport).isPresent())
                 throw new UniqueNameException(
                         EntityNotFoundException.Entity.Pet,
-                        UniqueNameException.UniqueName.Email,
+                        UniqueNameException.UniqueName.Passport,
                         passport);
             throw e;
         }

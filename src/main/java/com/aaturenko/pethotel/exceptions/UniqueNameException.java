@@ -5,7 +5,7 @@ public class UniqueNameException extends RuntimeException {
     private static final String MESSAGE = "%s with %s = %s already exists.";
 
     public enum UniqueName {
-        Email, UserName
+        Email, UserName, Passport
     }
 
     public UniqueNameException (EntityNotFoundException.Entity entity, UniqueName uniqueName, String value) {
