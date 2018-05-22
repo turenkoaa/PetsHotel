@@ -15,25 +15,28 @@ import java.util.function.Supplier;
 public class EntitiesFactory {
 
     public static Supplier<User> createNewExampleUser =
-            () -> new User()
-                .setFirstName("Сомин")
-                .setLastName("Игорь")
-                .setActive(true)
-                .setUserType(UserType.CUSTOMER)
-                .setEmail("somin@smth.com")
-                .setAddress("Новочеркасская");
+            () -> User.builder()
+                .firstName("Сомин")
+                .lastName("Игорь")
+                .active(true)
+                .userType(UserType.CUSTOMER)
+                .email("somin@smth.com")
+                .address("Новочеркасская")
+                .build();
 
     public static Supplier<Pet> createNewExamplePet =
-            () -> new Pet()
-                .setPetType(PetType.CAT)
-                .setName("Вася")
-                .setAge(2)
-                .setPassport("12234");
+            () -> Pet.builder()
+                .petType(PetType.CAT)
+                .name("Вася")
+                .age(2)
+                .passport("12234")
+                .build();
 
     public static Supplier<RequestDto> createNewExampleRequestDto =
-        () -> new RequestDto()
-            .setStartDate(LocalDate.of(2018, 06, 02))
-            .setEndDate(LocalDate.of(2018, 07, 13))
-            .setCost(2000);
+        () -> RequestDto.builder()
+            .startDate(LocalDate.of(2018, 06, 02))
+            .endDate(LocalDate.of(2018, 07, 13))
+            .cost(2000)
+            .build();
 
 }

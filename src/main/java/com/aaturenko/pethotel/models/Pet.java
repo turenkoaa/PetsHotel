@@ -37,4 +37,53 @@ public class Pet{
     @NotNull
     private String passport;
 
+    public static PetBuilder builder() {
+        return new PetBuilder();
+    }
+
+    public static class PetBuilder {
+        private Long id;
+        private User owner;
+        private PetType petType;
+        private String name;
+        private Integer age;
+        private String passport;
+
+        PetBuilder() {
+        }
+
+        public PetBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public PetBuilder owner(User owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public PetBuilder petType(PetType petType) {
+            this.petType = petType;
+            return this;
+        }
+
+        public PetBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public PetBuilder age(Integer age) {
+            this.age = age;
+            return this;
+        }
+
+        public PetBuilder passport(String passport) {
+            this.passport = passport;
+            return this;
+        }
+
+        public Pet build() {
+            return new Pet(id, owner, petType, name, age, passport);
+        }
+    }
 }

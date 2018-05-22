@@ -1,5 +1,6 @@
 package com.aaturenko.pethotel.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
