@@ -1,41 +1,24 @@
-package com.aaturenko.pethotel.models;
-
+package com.aaturenko.pethotel.entities;
 
 import com.aaturenko.pethotel.enums.PetType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+public class Pet {
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class Pet{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "pet_id")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User owner;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
     private PetType petType;
-
-    @NotNull
     private String name;
-
-    @NotNull
     private Integer age;
-
-    @NotNull
     private String passport;
+
+    public Pet() {}
+
+    public Pet(Long id, PetType petType, String name, Integer age, String passport) {
+        this.id = id;
+        this.petType = petType;
+        this.name = name;
+        this.age = age;
+        this.passport = passport;
+    }
 
     public static PetBuilder builder() {
         return new PetBuilder();
@@ -43,7 +26,6 @@ public class Pet{
 
     public static class PetBuilder {
         private Long id;
-        private User owner;
         private PetType petType;
         private String name;
         private Integer age;
@@ -54,11 +36,6 @@ public class Pet{
 
         public PetBuilder id(Long id) {
             this.id = id;
-            return this;
-        }
-
-        public PetBuilder owner(User owner) {
-            this.owner = owner;
             return this;
         }
 
@@ -83,7 +60,7 @@ public class Pet{
         }
 
         public Pet build() {
-            return new Pet(id, owner, petType, name, age, passport);
+            return new Pet(id, petType, name, age, passport);
         }
     }
 }

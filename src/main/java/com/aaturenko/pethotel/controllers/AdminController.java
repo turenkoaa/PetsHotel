@@ -1,6 +1,6 @@
 package com.aaturenko.pethotel.controllers;
 
-import com.aaturenko.pethotel.services.AdminService;
+import com.aaturenko.pethotel.old.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

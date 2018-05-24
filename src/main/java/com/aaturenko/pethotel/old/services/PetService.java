@@ -1,6 +1,6 @@
-package com.aaturenko.pethotel.services;
+package com.aaturenko.pethotel.old.services;
 
-import com.aaturenko.pethotel.models.Pet;
+import com.aaturenko.pethotel.old.models.Pet;
 
 import java.util.List;
 

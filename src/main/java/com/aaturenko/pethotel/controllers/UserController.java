@@ -1,7 +1,7 @@
 package com.aaturenko.pethotel.controllers;
 
-import com.aaturenko.pethotel.models.User;
-import com.aaturenko.pethotel.services.UserService;
+import com.aaturenko.pethotel.old.models.User;
+import com.aaturenko.pethotel.old.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

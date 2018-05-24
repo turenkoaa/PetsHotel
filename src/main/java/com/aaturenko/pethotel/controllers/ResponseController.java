@@ -2,12 +2,12 @@ package com.aaturenko.pethotel.controllers;
 
 import com.aaturenko.pethotel.dto.RequestDto;
 import com.aaturenko.pethotel.dto.ResponseDto;
-import com.aaturenko.pethotel.models.Pet;
-import com.aaturenko.pethotel.models.Request;
-import com.aaturenko.pethotel.models.Response;
-import com.aaturenko.pethotel.services.ManageStatusesService;
-import com.aaturenko.pethotel.services.RequestService;
-import com.aaturenko.pethotel.services.ResponseService;
+import com.aaturenko.pethotel.old.models.Pet;
+import com.aaturenko.pethotel.old.models.Request;
+import com.aaturenko.pethotel.old.models.Response;
+import com.aaturenko.pethotel.old.services.ManageStatusesService;
+import com.aaturenko.pethotel.old.services.RequestService;
+import com.aaturenko.pethotel.old.services.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

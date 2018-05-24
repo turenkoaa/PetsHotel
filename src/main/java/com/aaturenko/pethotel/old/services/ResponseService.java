@@ -1,7 +1,7 @@
-package com.aaturenko.pethotel.services;
+package com.aaturenko.pethotel.old.services;
 
 import com.aaturenko.pethotel.dto.ResponseDto;
-import com.aaturenko.pethotel.models.Response;
+import com.aaturenko.pethotel.old.models.Response;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
