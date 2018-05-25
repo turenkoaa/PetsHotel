@@ -15,7 +15,6 @@ import java.util.function.Function;
 @Builder
 public class Request extends Entity {
 
-    private long id;
     private LocalDate startDate;
     private LocalDate endDate;
     private RequestStatus status;

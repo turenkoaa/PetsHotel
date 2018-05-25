@@ -33,7 +33,9 @@ dependencies {
             'mysql:mysql-connector-java',
             'io.springfox:springfox-swagger2:2.8.0',
             'io.springfox:springfox-swagger-ui:2.8.0',
-            "org.flywaydb:flyway-core:5.0.7"
+            "org.flywaydb:flyway-core:5.0.7",
+            'io.springfox:springfox-swagger2:2.8.0',
+            'io.springfox:springfox-swagger-ui:2.8.0'
 
     compileOnly('org.projectlombok:lombok')
 

@@ -1,5 +1,6 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dto.ResponseDto;
 import com.aaturenko.pethotel.enums.RequestStatus;
 import com.aaturenko.pethotel.enums.ResponseStatus;
 import com.aaturenko.pethotel.strategies.UpdateResponseStatusStrategy;
@@ -12,7 +13,6 @@ import static com.aaturenko.pethotel.enums.ResponseStatus.REJECTED;
 @Data
 public class Response extends Entity {
 
-    private long id;
     private User user;
     private Request request;
     private ResponseStatus status;
@@ -20,6 +20,10 @@ public class Response extends Entity {
     private int cost;
 
     private UpdateResponseStatusStrategy statusStrategy = new ValidUpdateResponseStatusStrategy();
+
+    public static Response newResponse(ResponseDto responseDto) {
+        return null;
+    }
 
     public void changeStatus(ResponseStatus status) {
         if (status.equals(this.status)) {

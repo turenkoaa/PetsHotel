@@ -1,5 +1,6 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dto.ResponseDto;
 import lombok.Data;
 
 import java.util.List;
@@ -33,5 +34,10 @@ public class Sitter extends User {
         changeStatus(false);
         responses.forEach(Response::reject);
     }
+
+    public void addResponse(ResponseDto responseDto){
+        responses.add(Response.newResponse(responseDto));
+    }
+
 
 }

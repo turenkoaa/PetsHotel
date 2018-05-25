@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public abstract class User extends Entity {
 
-    protected long id;
     protected String firstName;
     protected String lastName;
     protected String email;

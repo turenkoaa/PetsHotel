@@ -2,9 +2,8 @@ package com.aaturenko.pethotel.entities;
 
 import com.aaturenko.pethotel.enums.PetType;
 
-public class Pet {
+public class Pet extends Entity {
 
-    private Long id;
     private PetType petType;
     private String name;
     private Integer age;
