@@ -1,15 +1,34 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.repositories.Repository;
-import lombok.Getter;
+import lombok.Data;
 
+import java.util.Objects;
+
+@Data
 public class Entity {
 
-    @Getter
     protected long id;
 
     public void update(){
-        Repository repository = null;
-        repository.update(this);
+        Registry.repository.update(this);
+    }
+
+    public Entity(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return id == entity.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class RequestDto {
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<Long> petsIds;
+    private Long petsId;
     private int cost;
 
     public static RequestDtoBuilder builder() {
@@ -23,7 +23,7 @@ public class RequestDto {
     public static class RequestDtoBuilder {
         private LocalDate startDate;
         private LocalDate endDate;
-        private List<Long> petsIds;
+        private Long petsId;
         private int cost;
 
         RequestDtoBuilder() {}
@@ -38,8 +38,8 @@ public class RequestDto {
             return this;
         }
 
-        public RequestDtoBuilder petsIds(List<Long> petsIds) {
-            this.petsIds = petsIds;
+        public RequestDtoBuilder petsIds(Long petsId) {
+            this.petsId = petsId;
             return this;
         }
 
@@ -49,7 +49,7 @@ public class RequestDto {
         }
 
         public RequestDto build() {
-            return new RequestDto(startDate, endDate, petsIds, cost);
+            return new RequestDto(startDate, endDate, petsId, cost);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.aaturenko.pethotel.enums;
+package com.aaturenko.pethotel.old;
 
 public enum UserType {
     CUSTOMER,

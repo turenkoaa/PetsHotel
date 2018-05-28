@@ -5,13 +5,13 @@ SET NAMES utf8;
 -- Data for table `user`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (1, 'Морозова', 'Виолетта', 'Дыбенко', 1, 'CUSTOMER', 'morozova@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (2, 'Иванова', 'Мария', 'Проспект Просвящения', 1, 'CUSTOMER', 'ivanova@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (3, 'Михайлов', 'Виктор', 'Проспект Большевиков', 1, 'CUSTOMER', 'mihailov@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (4, 'Смирнова', 'Валерия', 'Ладожская', 1, 'CUSTOMER', 'smirnova@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (5, 'Кузнецов', 'Сергей', 'Дыбенко', 1, 'CUSTOMER', 'kuznetsov@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (6, 'Торопов', 'Иван', 'Удельная', 0, 'CUSTOMER', 'toropov@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (7, 'админ', 'админ', '-', 1, 'ADMIN', 'admin@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (1, 'Морозова', 'Виолетта', 'Дыбенко', 1, 'morozova@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (2, 'Иванова', 'Мария', 'Проспект Просвящения', 1, 'ivanova@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (3, 'Михайлов', 'Виктор', 'Проспект Большевиков', 1, 'mihailov@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (4, 'Смирнова', 'Валерия', 'Ладожская', 1, 'smirnova@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (5, 'Кузнецов', 'Сергей', 'Дыбенко', 1, 'kuznetsov@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (6, 'Торопов', 'Иван', 'Удельная', 0, 'toropov@smth.com');
+-- INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (7, 'админ', 'админ', '-', 1, 'admin@smth.com');
 
 COMMIT;
 

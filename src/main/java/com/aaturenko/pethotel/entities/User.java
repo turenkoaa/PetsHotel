@@ -1,8 +1,15 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.repositories.Registry;
+import com.aaturenko.pethotel.dto.ReviewDto;
+import com.aaturenko.pethotel.repositories.ReviewRepository;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public abstract class User extends Entity {
 
     protected String firstName;
@@ -10,8 +17,45 @@ public abstract class User extends Entity {
     protected String email;
     protected Boolean active;
     protected String address;
+    protected List<Review> reviewsAboutMe;
 
-    public abstract static class UserBuilder {
+    protected User(long id, String firstName, String lastName, String email, Boolean active, String address) {
+        super(id);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.active = active;
+        this.address = address;
+    }
+
+    public void changeStatus(boolean active) {
+        this.setActive(active);
+        update();
+    }
+
+    public abstract void block();
+
+    public void activate(){
+        changeStatus(true);
+    }
+
+    public Review addReview(ReviewDto reviewDto) {
+        Review review = Review.newReview(reviewDto, this);
+        reviewsAboutMe.add(review);
+        return review;
+    }
+
+    public List<Review> getReviewsAboutMe() {
+        if (reviewsAboutMe == null)
+            reviewsAboutMe = Review.findAllByUser(this);
+        return reviewsAboutMe;
+    }
+
+    public static List<User> findAll(){
+        return Registry.userRepository.findAll();
+    }
+
+    public static abstract class UserBuilder {
         protected long id;
         protected String firstName;
         protected String lastName;
@@ -53,25 +97,5 @@ public abstract class User extends Entity {
 
         public abstract User build();
 
-    }
-
-    protected User(long id, String firstName, String lastName, String email, Boolean active, String address) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.active = active;
-        this.address = address;
-    }
-
-    public void changeStatus(boolean active) {
-        this.setActive(active);
-        update();
-    }
-
-    public abstract void block();
-
-    public void activate(){
-        changeStatus(true);
     }
 }

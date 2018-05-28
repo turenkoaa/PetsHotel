@@ -17,6 +17,24 @@ ENGINE = InnoDB;
 CREATE UNIQUE INDEX `email_UNIQUE` ON `user` (`email` ASC);
 
 -- -----------------------------------------------------
+-- Table `review`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `review` (
+  `review_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `like` TINYINT(1) NOT NULL DEFAULT 1,
+  `comment` VARCHAR(300) NOT NULL,
+  `user_id` BIGINT NOT NULL,
+  PRIMARY KEY (`review_id`),
+  CONSTRAINT `fk_review_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE))
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_review_user1_idx` ON `review` (`user_id` ASC);
+
+-- -----------------------------------------------------
 -- Table `pet`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pet` (
@@ -67,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `request` (
   `status` ENUM('NEW', 'SOLVED', 'ANULLED') NOT NULL DEFAULT 'NEW',
   `user_id` BIGINT NOT NULL,
   `cost` INT NULL,
+  `paid` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`request_id`),
   CONSTRAINT `fk_request_user1`
     FOREIGN KEY (`user_id`)

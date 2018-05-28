@@ -1,22 +1,62 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dto.PetDto;
 import com.aaturenko.pethotel.dto.RequestDto;
 import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
+import com.aaturenko.pethotel.repositories.PetRepository;
+import com.aaturenko.pethotel.repositories.RequestRepository;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Optional;
 
 @Data
-public class Owner extends User{
+@EqualsAndHashCode(callSuper = true)
+public class Owner extends User {
 
     private List<Pet> pets;
     private List<Request> requests;
 
-    public Owner(long id, String firstName, String lastName, String email, Boolean active, String address, List<Pet> pets, List<Request> requests) {
+    private Owner(long id, String firstName, String lastName, String email, Boolean active, String address, List<Pet> pets, List<Request> requests) {
         super(id, firstName, lastName, email, active, address);
         this.pets = pets;
         this.requests = requests;
+    }
+
+    public Request addRequest(RequestDto requestDto){
+        Request request = Request.newRequest(requestDto, this);
+        requests.add(request);
+        return request;
+    }
+
+    public Pet addPet(PetDto petDto) {
+        Pet pet = Pet.newPet(petDto, this);
+        pets.add(pet);
+        return pet;
+    }
+
+    @Override
+    public void block() {
+        throw new UnsupportedOperationException();
+    }
+
+    public List<Pet> getPets() {
+        if (pets == null)
+            pets = Pet.findAllByUser(this);
+        return pets;
+    }
+
+    public List<Request> getRequests() {
+        if (requests == null)
+            requests = Request.findAllByUser(this);
+        return requests;
+    }
+
+    public static OwnerBuilder builder() {
+        return new OwnerBuilder();
     }
 
     public static class OwnerBuilder extends UserBuilder{
@@ -33,33 +73,4 @@ public class Owner extends User{
             this.requests = requests;
         }
     }
-
-    public void addRequest(RequestDto requestDto){
-        if (requestDto.getStartDate().compareTo(requestDto.getEndDate()) > 0)
-            throw new IllegalArgumentException("Start date must be less then end date.");
-
-        requests.add(Request.newRequest(requestDto, this));
-    }
-
-    @Override
-    public void block() {
-        throw new UnsupportedOperationException();
-    }
-
-//    public void deleteRequest(Long requestId){
-//        requests.remove(
-//                findRequest(requestId).orElseThrow(() -> new EntityNotFoundException(EntityNotFoundException.Entity.Request, requestId))
-//        );
-//    }
-//
-//    private Optional<Request> findRequest(Long requestId) {
-//
-//        for (Request request: requests) {
-//            if (requestId.equals(request.getId()))
-//                return Optional.of(request);
-//        }
-//
-//        return Optional.empty();
-//    }
-
 }
