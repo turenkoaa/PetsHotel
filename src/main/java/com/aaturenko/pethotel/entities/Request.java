@@ -1,5 +1,8 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.mapper.RequestMapper;
 import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.dto.RequestDto;
 import com.aaturenko.pethotel.enums.RequestStatus;
@@ -26,6 +29,7 @@ public class Request extends Entity {
     private List<Response> responses;
 
     private UpdateRequestStatusStrategy statusStrategy = new ValidResponseUpdateRequestStatusStrategy();
+    private static RequestMapper requestMapper = (RequestMapper) DataMapperRegistry.getMapper(Request.class);
 
     public Request(long id, LocalDate startDate, LocalDate endDate, RequestStatus status, Pet pet, int cost) {
         super(id);
@@ -34,6 +38,11 @@ public class Request extends Entity {
         this.status = status;
         this.pet = pet;
         this.cost = cost;
+    }
+
+    @Override
+    public DataMapper getMapper() {
+        return requestMapper;
     }
 
     private void changeStatus(RequestStatus status) {
@@ -75,19 +84,19 @@ public class Request extends Entity {
 
         Request request = mapFromDto.apply(requestDto);
         request.setUser(user);
-        return Registry.requestRepository.save(request);
+        return (Request) requestMapper.save(request);//Registry.requestRepository.save(request);
     }
 
     public static Request findByResponse(Response response) {
-        return Registry.requestRepository.findByResponse(response);
+        return requestMapper.findByResponse(response);//Registry.requestRepository.findByResponse(response);
     }
 
     public static List<Request> findAllByUser(User user) {
-        return Registry.requestRepository.findAllByUser(user);
+        return requestMapper.findAllByUser(user);// Registry.requestRepository.findAllByUser(user);
     }
 
     public static List<Request> findNewRequests() {
-        return Registry.requestRepository.findNewRequests();
+        return requestMapper.findAllByStatus(RequestStatus.NEW);//Registry.requestRepository.findNewRequests();
     }
 
     public static RequestBuilder builder() {
@@ -95,7 +104,7 @@ public class Request extends Entity {
     }
 
     public static Request find(long requestId) {
-        return (Request) Registry.requestRepository.findById(requestId);
+        return (Request) requestMapper.findById(requestId);//Registry.requestRepository.findById(requestId);
     }
 
     public static class RequestBuilder {

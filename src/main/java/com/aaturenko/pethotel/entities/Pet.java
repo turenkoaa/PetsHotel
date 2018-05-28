@@ -1,5 +1,8 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.mapper.PetMapper;
 import com.aaturenko.pethotel.dto.PetDto;
 import com.aaturenko.pethotel.enums.PetType;
 import com.aaturenko.pethotel.repositories.Registry;
@@ -21,6 +24,8 @@ public class Pet extends Entity {
     private String passport;
     private User user;
 
+    private static PetMapper petMapper = (PetMapper) DataMapperRegistry.getMapper(Pet.class);
+
     public Pet(Long id, PetType petType, String name, Integer age, String passport, User user) {
         super(id);
         this.petType = petType;
@@ -39,15 +44,20 @@ public class Pet extends Entity {
                 .passport(petDto.getPassport())
                 .user(user)
                 .build();
-        return Registry.petRepository.save(pet);
+        return (Pet) petMapper.save(pet); //Registry.petRepository.save(pet);
     }
 
     public static List<Pet> findAllByUser(User user) {
-        return Registry.petRepository.findAllByUser(user);
+        return petMapper.findAllByUser(user); //Registry.petRepository.findAllByUser(user);
     }
 
     public static PetBuilder builder() {
         return new PetBuilder();
+    }
+
+    @Override
+    public DataMapper getMapper() {
+        return petMapper;
     }
 
     public static class PetBuilder {

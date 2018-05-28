@@ -1,5 +1,8 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.mapper.ResponseMapper;
 import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.dto.ResponseDto;
 import com.aaturenko.pethotel.enums.ResponseStatus;
@@ -23,6 +26,7 @@ public class Response extends Entity {
     private int cost;
 
     private UpdateResponseStatusStrategy statusStrategy = new ValidUpdateResponseStatusStrategy();
+    private static ResponseMapper responseMapper = (ResponseMapper) DataMapperRegistry.getMapper(Response.class);
 
     public Response(long id, User user, Request request, ResponseStatus status, String details, int cost) {
         super(id);
@@ -46,12 +50,12 @@ public class Response extends Entity {
 
     public Request getRequest() {
         if (request == null)
-            request = Request.findByResponse(this);
+            request = null; //Request.findByResponse(this);
         return request;
     }
 
     public static List<Response> findAllByRequest(Request request) {
-        return Registry.responseRepository.findByRequest(request);
+        return responseMapper.findAllByRequest(request); //Registry.responseRepository.findByRequest(request);
     }
 
     public static Response newResponse(ResponseDto responseDto, User user) {
@@ -62,19 +66,24 @@ public class Response extends Entity {
                 .status(PROPOSED)
                 .cost(responseDto.getCost())
                 .build();
-        return Registry.responseRepository.save(response);
+        return (Response) responseMapper.save(response); //Registry.responseRepository.save(response);
     }
 
     public static List<Response> findAllByUser(User user) {
-        return Registry.responseRepository.findAllByUser(user);
+        return responseMapper.findAllByUser(user); //Registry.responseRepository.findAllByUser(user);
     }
 
     public static List<Response> findByRequest(Request request) {
-        return Registry.responseRepository.findByRequest(request);
+        return responseMapper.findAllByRequest(request); //Registry.responseRepository.findByRequest(request);
     }
 
     public static ResponseBuilder builder() {
         return new ResponseBuilder();
+    }
+
+    @Override
+    public DataMapper getMapper() {
+        return responseMapper;
     }
 
     public static class ResponseBuilder {

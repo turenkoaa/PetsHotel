@@ -2,6 +2,7 @@ package com.aaturenko.pethotel.dao.mapper;
 
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.entities.Entity;
+import com.aaturenko.pethotel.entities.Request;
 import com.aaturenko.pethotel.entities.Response;
 import com.aaturenko.pethotel.entities.User;
 import com.aaturenko.pethotel.enums.ResponseStatus;
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ResponseMapper extends DataMapper {
     private static final String TABLE_NAME = "response";
@@ -29,6 +31,14 @@ public class ResponseMapper extends DataMapper {
     @Override
     protected void doUpdate(Entity entity, PreparedStatement st) throws SQLException {
         setColumns((Response) entity, st);
+    }
+
+    public List<Response> findAllByRequest(Request request) {
+        return findAllByCustomWhere("request_id = ?", request.getId());
+    }
+
+    public List<Response> findAllByUser(User user) {
+        return findAllByCustomWhere("user_id = ?", user.getId());
     }
 
     private void setColumns(Response response, PreparedStatement st) throws SQLException {

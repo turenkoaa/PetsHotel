@@ -1,13 +1,13 @@
 package com.aaturenko.pethotel.dao.mapper;
 
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.entities.Entity;
-import com.aaturenko.pethotel.entities.Pet;
-import com.aaturenko.pethotel.entities.Request;
+import com.aaturenko.pethotel.entities.*;
 import com.aaturenko.pethotel.enums.RequestStatus;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import java.sql.*;
 import java.sql.Date;
+import java.util.List;
 
 public class RequestMapper extends DataMapper {
     private static final String TABLE_NAME = "request";
@@ -51,6 +51,18 @@ public class RequestMapper extends DataMapper {
                 .pet(pet)
                 .cost(rs.getInt("cost"))
                 .build();
+    }
+
+    public List<Request> findAllByUser(User user) {
+        return findAllByCustomWhere("user_id = ?", user.getId());
+    }
+
+    public List<Request> findAllByStatus(RequestStatus requestStatus) {
+        return findAllByCustomWhere("status = ?", requestStatus.toString());
+    }
+
+    public Request findByResponse(Response response) {
+        return null; // findOneByCustomWhere("status = ?", requestStatus.toString());
     }
 
     @Override

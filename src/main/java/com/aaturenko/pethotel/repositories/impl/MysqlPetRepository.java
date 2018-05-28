@@ -2,6 +2,7 @@ package com.aaturenko.pethotel.repositories.impl;
 
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.mapper.PetMapper;
 import com.aaturenko.pethotel.entities.Pet;
 import com.aaturenko.pethotel.entities.User;
 import com.aaturenko.pethotel.repositories.PetRepository;
@@ -11,11 +12,8 @@ import java.util.List;
 
 public class MysqlPetRepository implements PetRepository {
 
-    public MysqlPetRepository(DataMapper mapper) {
-        this.mapper = mapper;
-    }
 
-    private DataMapper mapper; // DataMapperRegistry.getMapper(Pet.class);
+    private PetMapper mapper; // DataMapperRegistry.getMapper(Pet.class);
 
     @Override
     public Pet save(Pet pet) {
@@ -24,11 +22,11 @@ public class MysqlPetRepository implements PetRepository {
 
     @Override
     public List<Pet> findAllByUser(User user) {
-        return null;
+        return mapper.findAllByUser(user);
     }
 
     @Override
     public DataMapper getDataMapper() {
-        return null;
+        return mapper;
     }
 }

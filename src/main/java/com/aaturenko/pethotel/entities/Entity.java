@@ -1,5 +1,6 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.repositories.Repository;
 import lombok.Data;
@@ -7,12 +8,12 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class Entity {
+public abstract class Entity {
 
     protected long id;
 
     public void update(){
-        Registry.repository.update(this);
+        getMapper().update(this);
     }
 
     public Entity(long id) {
@@ -31,4 +32,6 @@ public class Entity {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public abstract DataMapper getMapper();
 }

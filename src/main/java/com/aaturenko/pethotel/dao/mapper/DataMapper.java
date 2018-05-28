@@ -127,11 +127,27 @@ public abstract class DataMapper {
         }
     }
 
-    public List<Entity> findAllByCustomWhere(String whereClause, Object... args) {
+    public List findAllByCustomWhere(String whereClause, Object... args) {
         final String query = "SELECT " + getPrimaryKeyColumnName() + " FROM " + getTableName() + " WHERE " + whereClause;
         final List<Entity> results = new ArrayList<>();
 
         try (PreparedStatement findStatement = prepareCustomStatement(dbConnection, query, args)) {
+            final ResultSet rs = findStatement.executeQuery();
+            while (rs.next()) {
+                results.add(findById(rs.getLong(1)));
+            }
+        } catch (SQLException e) {
+            DBConnection.closeConnection();
+            throw new RuntimeException(e);
+        }
+        return results;
+    }
+
+    public List findAll() {
+        final String query = "SELECT " + getPrimaryKeyColumnName() + " FROM " + getTableName();
+        final List<Entity> results = new ArrayList<>();
+
+        try (PreparedStatement findStatement = dbConnection.prepareStatement(query)) {
             final ResultSet rs = findStatement.executeQuery();
             while (rs.next()) {
                 results.add(findById(rs.getLong(1)));
@@ -149,6 +165,22 @@ public abstract class DataMapper {
             findStatement.setObject(i+1, args[i]);
         }
         return findStatement;
+    }
+
+    protected Entity findOneByCustomWhere(String whereClause, Object... args) {
+        String query =
+                "SELECT " + getPrimaryKeyColumnName() + " FROM " + getTableName() + " WHERE " + whereClause;
+        try (PreparedStatement findStatement = prepareCustomStatement(dbConnection, query, args)) {
+            ResultSet rs = findStatement.executeQuery();
+            if (rs.next()) {
+                return findById(rs.getLong(1));
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            DBConnection.closeConnection();
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -1,5 +1,8 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.mapper.ReviewMapper;
 import com.aaturenko.pethotel.dto.ReviewDto;
 import com.aaturenko.pethotel.repositories.Registry;
 import lombok.Data;
@@ -14,6 +17,8 @@ public class Review extends Entity {
     private String comment;
     private boolean like;
     private User user;
+
+    private static ReviewMapper reviewMapper = (ReviewMapper) DataMapperRegistry.getMapper(Review.class);
 
     private Review(long id, boolean like, String comment, User user) {
         super(id);
@@ -42,6 +47,11 @@ public class Review extends Entity {
 
     public static ReviewBuilder builder() {
         return new ReviewBuilder();
+    }
+
+    @Override
+    public DataMapper getMapper() {
+        return reviewMapper;
     }
 
     public static class ReviewBuilder {

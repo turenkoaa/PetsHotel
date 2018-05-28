@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ReviewMapper extends DataMapper {
     private static final String TABLE_NAME = "review";
@@ -49,6 +50,14 @@ public class ReviewMapper extends DataMapper {
                 .comment(rs.getString("comment"))
                 .user(user)
                 .build();
+    }
+
+    public List<Review> findAllByLike(boolean like) {
+        return findAllByCustomWhere("like = ?", like);
+    }
+
+    public List<Review> findAllByUser(User user) {
+        return findAllByCustomWhere("user_id = ?", user.getId());
     }
 
     @Override

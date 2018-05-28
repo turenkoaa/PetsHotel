@@ -1,5 +1,8 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.mapper.UserMapper;
 import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.dto.ReviewDto;
 import com.aaturenko.pethotel.repositories.ReviewRepository;
@@ -18,6 +21,12 @@ public abstract class User extends Entity {
     protected Boolean active;
     protected String address;
     protected List<Review> reviewsAboutMe;
+
+    private static UserMapper userMapper = (UserMapper) DataMapperRegistry.getMapper(User.class);
+
+    public DataMapper getMapper() {
+        return userMapper;
+    }
 
     protected User(long id, String firstName, String lastName, String email, Boolean active, String address) {
         super(id);
@@ -52,7 +61,7 @@ public abstract class User extends Entity {
     }
 
     public static List<User> findAll(){
-        return Registry.userRepository.findAll();
+        return userMapper.findAll(); //Registry.userRepository.findAll();
     }
 
     public static abstract class UserBuilder {
