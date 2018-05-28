@@ -4,7 +4,6 @@ import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.ReviewMapper;
 import com.aaturenko.pethotel.dto.ReviewDto;
-import com.aaturenko.pethotel.repositories.Registry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,15 +33,19 @@ public class Review extends Entity {
                 .comment(reviewDto.getComment())
                 .user(user)
                 .build();
-        return Registry.reviewRepository.save(review);
+        return (Review) reviewMapper.save(review);
+    }
+
+    public static Review find(long id) {
+        return (Review) reviewMapper.findById(id);
     }
 
     public static List<Review> showDislikedReviews() {
-        return Registry.reviewRepository.findAllByLike(false);
+        return reviewMapper.findAllByLike(false);
     }
 
     public static List<Review> findAllByUser(User user) {
-        return Registry.reviewRepository.findAllByUser(user);
+        return reviewMapper.findAllByUser(user);
     }
 
     public static ReviewBuilder builder() {

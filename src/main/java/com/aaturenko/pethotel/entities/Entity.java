@@ -1,8 +1,6 @@
 package com.aaturenko.pethotel.entities;
 
 import com.aaturenko.pethotel.dao.mapper.DataMapper;
-import com.aaturenko.pethotel.repositories.Registry;
-import com.aaturenko.pethotel.repositories.Repository;
 import lombok.Data;
 
 import java.util.Objects;
@@ -14,6 +12,14 @@ public abstract class Entity {
 
     public void update(){
         getMapper().update(this);
+    }
+
+    public void delete(){
+        getMapper().delete(this);
+    }
+
+    public Entity save(){
+        return getMapper().save(this);
     }
 
     public Entity(long id) {

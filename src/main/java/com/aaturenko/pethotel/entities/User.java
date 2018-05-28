@@ -3,9 +3,7 @@ package com.aaturenko.pethotel.entities;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.UserMapper;
-import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.dto.ReviewDto;
-import com.aaturenko.pethotel.repositories.ReviewRepository;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -61,7 +59,15 @@ public abstract class User extends Entity {
     }
 
     public static List<User> findAll(){
-        return userMapper.findAll(); //Registry.userRepository.findAll();
+        return userMapper.findAll();
+    }
+
+    public static User find(long id) {
+        return (User) userMapper.findById(id);
+    }
+
+    public static User findByEmail(String email) {
+        return userMapper.findByEmail(email);
     }
 
     public static abstract class UserBuilder {

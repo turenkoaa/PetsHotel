@@ -3,11 +3,9 @@ package com.aaturenko.pethotel.entities;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.RequestMapper;
-import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.dto.RequestDto;
 import com.aaturenko.pethotel.enums.RequestStatus;
 import com.aaturenko.pethotel.enums.ResponseStatus;
-import com.aaturenko.pethotel.repositories.ResponseRepository;
 import com.aaturenko.pethotel.strategies.UpdateRequestStatusStrategy;
 import lombok.Getter;
 import lombok.Setter;
@@ -84,29 +82,36 @@ public class Request extends Entity {
 
         Request request = mapFromDto.apply(requestDto);
         request.setUser(user);
-        return (Request) requestMapper.save(request);//Registry.requestRepository.save(request);
+        return (Request) requestMapper.save(request);
     }
 
     public static Request findByResponse(Response response) {
-        return requestMapper.findByResponse(response);//Registry.requestRepository.findByResponse(response);
+        return requestMapper.findByResponse(response);
     }
 
     public static List<Request> findAllByUser(User user) {
-        return requestMapper.findAllByUser(user);// Registry.requestRepository.findAllByUser(user);
+        return requestMapper.findAllByUser(user);
     }
 
     public static List<Request> findNewRequests() {
-        return requestMapper.findAllByStatus(RequestStatus.NEW);//Registry.requestRepository.findNewRequests();
+        return requestMapper.findAllByStatus(RequestStatus.NEW);
     }
+
+    public static Request find(long requestId) {
+        return (Request) requestMapper.findById(requestId);
+    }
+
+    private static Function<RequestDto, Request> mapFromDto =
+            dto -> Request.builder()
+                    .startDate(dto.getStartDate())
+                    .endDate(dto.getEndDate())
+                    .status(RequestStatus.NEW)
+                    .cost(dto.getCost())
+                    .build();
 
     public static RequestBuilder builder() {
         return new RequestBuilder();
     }
-
-    public static Request find(long requestId) {
-        return (Request) requestMapper.findById(requestId);//Registry.requestRepository.findById(requestId);
-    }
-
     public static class RequestBuilder {
         private long id;
         private LocalDate startDate;
@@ -114,6 +119,7 @@ public class Request extends Entity {
         private RequestStatus status;
         private Pet pet;
         private int cost;
+
 
         RequestBuilder() {
         }
@@ -147,13 +153,13 @@ public class Request extends Entity {
             this.cost = cost;
             return this;
         }
-
         public Request build() {
             return new Request(id, startDate, endDate, status, pet, cost);
         }
-    }
 
+    }
     public class ValidResponseUpdateRequestStatusStrategy implements UpdateRequestStatusStrategy {
+
 
         @Override
         public void acceptResponse(Long responseId) {
@@ -175,19 +181,11 @@ public class Request extends Entity {
             getResponses().forEach(r -> r.changeStatus(ResponseStatus.REJECTED));
             changeStatus(RequestStatus.ANULLED);
         }
-
         @Override
         public void setNewStatus() {
             changeStatus(RequestStatus.NEW);
             getResponses().forEach(r -> r.changeStatus(ResponseStatus.PROPOSED));
         }
-    }
 
-    private static Function<RequestDto, Request> mapFromDto =
-            dto -> Request.builder()
-                    .startDate(dto.getStartDate())
-                    .endDate(dto.getEndDate())
-                    .status(RequestStatus.NEW)
-                    .cost(dto.getCost())
-            .build();
+    }
 }

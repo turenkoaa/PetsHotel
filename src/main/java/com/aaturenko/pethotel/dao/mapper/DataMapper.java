@@ -82,7 +82,6 @@ public abstract class DataMapper {
 
     public Entity insert(final Entity entity) {
         try (PreparedStatement insertStatement = dbConnection.prepareStatement(getCreateQuery())){
-//            insertStatement.setLong(1, entity.getId());
             doInsert(entity, insertStatement);
             insertStatement.execute();
             if (useEntitiesCache) entitiesCache.put(entity.getId(), entity);
@@ -167,9 +166,9 @@ public abstract class DataMapper {
         return findStatement;
     }
 
-    protected Entity findOneByCustomWhere(String whereClause, Object... args) {
+    protected Entity findOneByCustomWhere(String tableName, String whereClause, Object... args) {
         String query =
-                "SELECT " + getPrimaryKeyColumnName() + " FROM " + getTableName() + " WHERE " + whereClause;
+                "SELECT " + getPrimaryKeyColumnName() + " FROM " + tableName + " WHERE " + whereClause;
         try (PreparedStatement findStatement = prepareCustomStatement(dbConnection, query, args)) {
             ResultSet rs = findStatement.executeQuery();
             if (rs.next()) {
@@ -181,6 +180,10 @@ public abstract class DataMapper {
             DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
+    }
+
+    protected Entity findOneByCustomWhere(String whereClause, Object... args) {
+        return findOneByCustomWhere(getTableName(), whereClause, args);
     }
 
 }

@@ -1,7 +1,5 @@
 package com.aaturenko.pethotel.entities;
 
-import com.aaturenko.pethotel.repositories.ReviewRepository;
-import com.aaturenko.pethotel.repositories.UserRepository;
 import com.aaturenko.pethotel.strategies.BlockStrategy;
 
 import java.util.ArrayList;

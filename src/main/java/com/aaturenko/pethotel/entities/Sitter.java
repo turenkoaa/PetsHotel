@@ -1,8 +1,6 @@
 package com.aaturenko.pethotel.entities;
 
 import com.aaturenko.pethotel.dto.ResponseDto;
-import com.aaturenko.pethotel.repositories.RequestRepository;
-import com.aaturenko.pethotel.repositories.ResponseRepository;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -1,9 +1,8 @@
 package com.aaturenko.pethotel.controllers;
 
-import com.aaturenko.pethotel.old.models.Pet;
-import com.aaturenko.pethotel.old.models.User;
-import com.aaturenko.pethotel.old.services.PetService;
-import com.aaturenko.pethotel.old.services.UserService;
+import com.aaturenko.pethotel.entities.Owner;
+import com.aaturenko.pethotel.entities.Pet;
+import com.aaturenko.pethotel.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,38 +15,25 @@ import java.util.List;
 @RequestMapping("/pet")
 public class PetController {
 
-    private final PetService petService;
-
-    @GetMapping("/all-by-ids")
-    public ResponseEntity<List<Pet>> findPets(
-            @RequestBody List<Long> ids,
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(petService.findAllById(ids, page, size));
-    }
-
     @GetMapping("/all-by-owner/{ownerId}")
-    public ResponseEntity<List<Pet>> findPets(
-            @PathVariable long ownerId,
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(petService.findPetsByOwnerId(ownerId, page, size));
+    public ResponseEntity<List<Pet>> findPets(@PathVariable long ownerId) {
+        Owner owner = (Owner) User.find(ownerId);
+        return ResponseEntity.ok(owner.getPets());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pet> findPet(
-            @PathVariable long id) {
-        return ResponseEntity.ok(petService.findPetById(id));
+    public ResponseEntity<Pet> findPet(@PathVariable long id) {
+        return ResponseEntity.ok(Pet.find(id));
     }
 
     @PostMapping("/save")
     public ResponseEntity<Pet> savePet(@RequestBody Pet pet) {
-        return ResponseEntity.ok(petService.saveOrUpdatePet(pet));
+        return ResponseEntity.ok((Pet) pet.save());
     }
 
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> deletePet(@PathVariable long id) {
-        petService.deletePetById(id);
+        Pet.find(id).delete();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

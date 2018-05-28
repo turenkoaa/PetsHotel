@@ -5,7 +5,6 @@ import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.PetMapper;
 import com.aaturenko.pethotel.dto.PetDto;
 import com.aaturenko.pethotel.enums.PetType;
-import com.aaturenko.pethotel.repositories.Registry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -44,11 +43,15 @@ public class Pet extends Entity {
                 .passport(petDto.getPassport())
                 .user(user)
                 .build();
-        return (Pet) petMapper.save(pet); //Registry.petRepository.save(pet);
+        return (Pet) petMapper.save(pet);
     }
 
     public static List<Pet> findAllByUser(User user) {
-        return petMapper.findAllByUser(user); //Registry.petRepository.findAllByUser(user);
+        return petMapper.findAllByUser(user);
+    }
+
+    public static Pet find(long id) {
+        return (Pet) petMapper.findById(id);
     }
 
     public static PetBuilder builder() {

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public abstract class UserMapper extends DataMapper{
     private static final String TABLE_NAME = "user";
@@ -36,6 +37,10 @@ public abstract class UserMapper extends DataMapper{
         st.setString(++i, user.getEmail());
         st.setString(++i, user.getAddress());
         st.setBoolean(++i, user.getActive());
+    }
+
+    public User findByEmail(String email) {
+        return (User) findOneByCustomWhere("email=?", email);
     }
 
     protected abstract Entity doLoad(long id, ResultSet rs) throws SQLException;

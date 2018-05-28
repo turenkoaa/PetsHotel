@@ -62,7 +62,7 @@ public class RequestMapper extends DataMapper {
     }
 
     public Request findByResponse(Response response) {
-        return null; // findOneByCustomWhere("status = ?", requestStatus.toString());
+        return (Request) findOneByCustomWhere("request rq, response rs", "rq.request_id = rs.request_id and response_id = ?", response.getId()); // findOneByCustomWhere("status = ?", requestStatus.toString());
     }
 
     @Override

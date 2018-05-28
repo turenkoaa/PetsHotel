@@ -3,7 +3,6 @@ package com.aaturenko.pethotel.entities;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.ResponseMapper;
-import com.aaturenko.pethotel.repositories.Registry;
 import com.aaturenko.pethotel.dto.ResponseDto;
 import com.aaturenko.pethotel.enums.ResponseStatus;
 import com.aaturenko.pethotel.strategies.UpdateResponseStatusStrategy;
@@ -50,12 +49,12 @@ public class Response extends Entity {
 
     public Request getRequest() {
         if (request == null)
-            request = null; //Request.findByResponse(this);
+            request = Request.findByResponse(this);
         return request;
     }
 
     public static List<Response> findAllByRequest(Request request) {
-        return responseMapper.findAllByRequest(request); //Registry.responseRepository.findByRequest(request);
+        return responseMapper.findAllByRequest(request);
     }
 
     public static Response newResponse(ResponseDto responseDto, User user) {
@@ -66,15 +65,19 @@ public class Response extends Entity {
                 .status(PROPOSED)
                 .cost(responseDto.getCost())
                 .build();
-        return (Response) responseMapper.save(response); //Registry.responseRepository.save(response);
+        return (Response) responseMapper.save(response);
     }
 
     public static List<Response> findAllByUser(User user) {
-        return responseMapper.findAllByUser(user); //Registry.responseRepository.findAllByUser(user);
+        return responseMapper.findAllByUser(user);
     }
 
     public static List<Response> findByRequest(Request request) {
-        return responseMapper.findAllByRequest(request); //Registry.responseRepository.findByRequest(request);
+        return responseMapper.findAllByRequest(request);
+    }
+
+    public static Response find(long id) {
+        return (Response) responseMapper.findById(id);
     }
 
     public static ResponseBuilder builder() {

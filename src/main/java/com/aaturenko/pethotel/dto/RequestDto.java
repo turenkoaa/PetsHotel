@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class RequestDto {
+    private long userId;
     private LocalDate startDate;
     private LocalDate endDate;
     private Long petsId;
@@ -18,6 +19,13 @@ public class RequestDto {
 
     public static RequestDtoBuilder builder() {
         return new RequestDtoBuilder();
+    }
+
+    public RequestDto(LocalDate startDate, LocalDate endDate, Long petsId, int cost) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.petsId = petsId;
+        this.cost = cost;
     }
 
     public static class RequestDtoBuilder {

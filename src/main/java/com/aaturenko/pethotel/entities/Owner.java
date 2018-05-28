@@ -1,10 +1,10 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.mapper.OwnerMapper;
 import com.aaturenko.pethotel.dto.PetDto;
 import com.aaturenko.pethotel.dto.RequestDto;
-import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
-import com.aaturenko.pethotel.repositories.PetRepository;
-import com.aaturenko.pethotel.repositories.RequestRepository;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -53,6 +53,11 @@ public class Owner extends User {
         if (requests == null)
             requests = Request.findAllByUser(this);
         return requests;
+    }
+
+    public static Owner find(long id) {
+        OwnerMapper mapper = (OwnerMapper) DataMapperRegistry.getMapper(Owner.class);
+        return (Owner) mapper.findById(id);
     }
 
     public static OwnerBuilder builder() {
