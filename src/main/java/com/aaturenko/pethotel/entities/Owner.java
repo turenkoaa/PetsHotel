@@ -1,29 +1,30 @@
 package com.aaturenko.pethotel.entities;
 
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.OwnerMapper;
 import com.aaturenko.pethotel.dto.PetDto;
 import com.aaturenko.pethotel.dto.RequestDto;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
-import java.util.Optional;
 
-@Data
+
 @EqualsAndHashCode(callSuper = true)
 public class Owner extends User {
 
     private List<Pet> pets;
     private List<Request> requests;
 
+    private static OwnerMapper userMapper = (OwnerMapper) DataMapperRegistry.getMapper(Owner.class);
+
     private Owner(long id, String firstName, String lastName, String email, Boolean active, String address, List<Pet> pets, List<Request> requests) {
         super(id, firstName, lastName, email, active, address);
         this.pets = pets;
         this.requests = requests;
+    }
+
+    public static Owner findByRequest(Request request) {
+        return userMapper.findByRequest(request);
     }
 
     public Request addRequest(RequestDto requestDto){
@@ -43,21 +44,28 @@ public class Owner extends User {
         throw new UnsupportedOperationException();
     }
 
-    public List<Pet> getPets() {
+    public List<Pet> pets() {
         if (pets == null)
             pets = Pet.findAllByUser(this);
         return pets;
     }
 
-    public List<Request> getRequests() {
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public List<Request> requests() {
         if (requests == null)
             requests = Request.findAllByUser(this);
         return requests;
     }
 
     public static Owner find(long id) {
-        OwnerMapper mapper = (OwnerMapper) DataMapperRegistry.getMapper(Owner.class);
-        return (Owner) mapper.findById(id);
+        return (Owner) userMapper.findById(id);
+    }
+
+    public static Owner findByEmail(String email) {
+        return (Owner) userMapper.findByEmail(email);
     }
 
     public static OwnerBuilder builder() {

@@ -1,12 +1,11 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.ResponseMapper;
 import com.aaturenko.pethotel.dto.ResponseDto;
 import com.aaturenko.pethotel.enums.ResponseStatus;
 import com.aaturenko.pethotel.strategies.UpdateResponseStatusStrategy;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 import static com.aaturenko.pethotel.enums.ResponseStatus.PROPOSED;
 import static com.aaturenko.pethotel.enums.ResponseStatus.REJECTED;
 
-@Data
+
 @EqualsAndHashCode(callSuper = true)
 public class Response extends Entity {
 
@@ -37,9 +36,9 @@ public class Response extends Entity {
     }
 
     public void changeStatus(ResponseStatus status) {
-        if (status.equals(this.status)) {
+        if (!status.equals(this.status)) {
             setStatus(status);
-            update();
+            save();
         }
     }
 
@@ -48,13 +47,13 @@ public class Response extends Entity {
     }
 
     public Request getRequest() {
-        if (request == null)
-            request = Request.findByResponse(this);
         return request;
     }
 
-    public static List<Response> findAllByRequest(Request request) {
-        return responseMapper.findAllByRequest(request);
+    public Request request() {
+        if (request == null)
+            request = Request.findByResponse(this);
+        return request;
     }
 
     public static Response newResponse(ResponseDto responseDto, User user) {
@@ -63,17 +62,21 @@ public class Response extends Entity {
                 .request(Request.find(responseDto.getRequestId()))
                 .details(responseDto.getDetails())
                 .status(PROPOSED)
+                .user(user)
                 .cost(responseDto.getCost())
                 .build();
         return (Response) responseMapper.save(response);
     }
 
     public static List<Response> findAllByUser(User user) {
-        return responseMapper.findAllByUser(user);
+        List<Response> responses = responseMapper.findAllByUser(user);
+        responses.forEach(r -> r.request());
+        return responses;
     }
 
     public static List<Response> findByRequest(Request request) {
-        return responseMapper.findAllByRequest(request);
+        List<Response> responses = responseMapper.findAllByRequest(request);
+        return responses;
     }
 
     public static Response find(long id) {
@@ -85,7 +88,7 @@ public class Response extends Entity {
     }
 
     @Override
-    public DataMapper getMapper() {
+    public DataMapper dataMapper() {
         return responseMapper;
     }
 
@@ -139,9 +142,44 @@ public class Response extends Entity {
 
         @Override
         public void reject() {
-            getRequest().setNewStatus();
+            request().setNewStatus();
             changeStatus(REJECTED);
         }
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
+    public ResponseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ResponseStatus status) {
+        this.status = status;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
 }

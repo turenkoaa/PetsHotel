@@ -1,16 +1,18 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.dao.mapper.SitterMapper;
 import com.aaturenko.pethotel.dto.ResponseDto;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
 public class Sitter extends User {
 
     private List<Response> responses;
+
+    private static SitterMapper userMapper = (SitterMapper) DataMapperRegistry.getMapper(Sitter.class);
 
     public Sitter(long id, String firstName, String lastName, String email, Boolean active, String address, List<Response> responses) {
         super(id, firstName, lastName, email, active, address);
@@ -38,17 +40,23 @@ public class Sitter extends User {
     @Override
     public void block() {
         changeStatus(false);
-        responses.forEach(Response::reject);
+        responses().forEach(Response::reject);
     }
 
-    public List<Response> getResponses() {
+    public List<Response> responses() {
         if (responses == null)
             responses = Response.findAllByUser(this);
         return responses;
     }
 
-    public void addResponse(ResponseDto responseDto){
-        responses.add(Response.newResponse(responseDto, this));
+    public static Sitter find(long id) {
+        return (Sitter) userMapper.findById(id);
+    }
+
+    public Response addResponse(ResponseDto responseDto){
+        Response response = Response.newResponse(responseDto, this);
+        responses().add(response);
+        return response;
     }
 
     public List<Request> findNewRequests() {

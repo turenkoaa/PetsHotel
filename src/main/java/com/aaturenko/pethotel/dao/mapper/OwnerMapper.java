@@ -2,14 +2,20 @@ package com.aaturenko.pethotel.dao.mapper;
 
 import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.Owner;
+import com.aaturenko.pethotel.entities.Request;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OwnerMapper extends UserMapper{
+
     public OwnerMapper(Connection dbConnection, boolean useEntitiesCache) {
         super(dbConnection, useEntitiesCache);
+    }
+
+    public Owner findByRequest(Request request) {
+        return (Owner) findOneByCustomWhereJoin("user, request", "user.user_id = request.user_id and request.request_id = ?", request.getId());
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.aaturenko.pethotel.dao.mapper;
 
 import com.aaturenko.pethotel.entities.Entity;
-import com.aaturenko.pethotel.entities.Owner;
 import com.aaturenko.pethotel.entities.Sitter;
 
 import java.sql.Connection;
@@ -9,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SitterMapper extends UserMapper {
+
     public SitterMapper(Connection dbConnection, boolean useEntitiesCache) {
         super(dbConnection, useEntitiesCache);
     }
@@ -24,4 +24,5 @@ public class SitterMapper extends UserMapper {
                 .active(rs.getBoolean("active"))
                 .build();
     }
+
 }

@@ -1,21 +1,19 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.RequestMapper;
 import com.aaturenko.pethotel.dto.RequestDto;
 import com.aaturenko.pethotel.enums.RequestStatus;
 import com.aaturenko.pethotel.enums.ResponseStatus;
 import com.aaturenko.pethotel.strategies.UpdateRequestStatusStrategy;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;
 
-@Setter
-@Getter
+@EqualsAndHashCode(callSuper = true)
 public class Request extends Entity {
 
     private LocalDate startDate;
@@ -39,14 +37,14 @@ public class Request extends Entity {
     }
 
     @Override
-    public DataMapper getMapper() {
+    public DataMapper dataMapper() {
         return requestMapper;
     }
 
     private void changeStatus(RequestStatus status) {
-        if (status.equals(this.status)) {
+        if (!status.equals(this.status)) {
             setStatus(status);
-            update();
+            save();
         }
     }
 
@@ -70,10 +68,16 @@ public class Request extends Entity {
         return this;
     }
 
-    public List<Response> getResponses() {
+    public List<Response> responses() {
         if (responses == null)
             responses = Response.findByRequest(this);
         return responses;
+    }
+
+    public User getUser() {
+        if (user == null)
+            user = Owner.findByRequest(this);
+        return user;
     }
 
     public static Request newRequest(RequestDto requestDto, User user) {
@@ -82,6 +86,7 @@ public class Request extends Entity {
 
         Request request = mapFromDto.apply(requestDto);
         request.setUser(user);
+        request.setPet(Pet.find(requestDto.getPetId()));
         return (Request) requestMapper.save(request);
     }
 
@@ -164,7 +169,7 @@ public class Request extends Entity {
         @Override
         public void acceptResponse(Long responseId) {
             changeStatus(RequestStatus.SOLVED);
-            getResponses().forEach(r -> {
+            responses().forEach(r -> {
                         if (responseId.equals(r.getId())) r.changeStatus(ResponseStatus.ACCEPTED);
                         else r.changeStatus(ResponseStatus.REJECTED);
                     });
@@ -173,19 +178,63 @@ public class Request extends Entity {
         @Override
         public void rejectResponses() {
             changeStatus(RequestStatus.NEW);
-            getResponses().forEach(r -> r.changeStatus(ResponseStatus.REJECTED));
+            responses().forEach(r -> r.changeStatus(ResponseStatus.REJECTED));
         }
 
         @Override
         public void anulledRequest() {
-            getResponses().forEach(r -> r.changeStatus(ResponseStatus.REJECTED));
+            responses().forEach(r -> r.changeStatus(ResponseStatus.REJECTED));
             changeStatus(RequestStatus.ANULLED);
         }
         @Override
         public void setNewStatus() {
             changeStatus(RequestStatus.NEW);
-            getResponses().forEach(r -> r.changeStatus(ResponseStatus.PROPOSED));
+            responses().forEach(r -> r.changeStatus(ResponseStatus.PROPOSED));
         }
 
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public RequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

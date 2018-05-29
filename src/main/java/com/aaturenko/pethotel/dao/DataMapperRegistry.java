@@ -22,6 +22,7 @@ public class DataMapperRegistry {
         registry.put(Request.class, new RequestMapper(connection, useCache));
         registry.put(Response.class, new ResponseMapper(connection, useCache));
         registry.put(Review.class, new ReviewMapper(connection, useCache));
+        registry.put(Pet.class, new PetMapper(connection, useCache));
     }
 
     public static void clear() {

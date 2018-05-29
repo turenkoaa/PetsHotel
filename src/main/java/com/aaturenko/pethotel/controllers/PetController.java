@@ -1,5 +1,6 @@
 package com.aaturenko.pethotel.controllers;
 
+import com.aaturenko.pethotel.dto.PetDto;
 import com.aaturenko.pethotel.entities.Owner;
 import com.aaturenko.pethotel.entities.Pet;
 import com.aaturenko.pethotel.entities.User;
@@ -17,8 +18,8 @@ public class PetController {
 
     @GetMapping("/all-by-owner/{ownerId}")
     public ResponseEntity<List<Pet>> findPets(@PathVariable long ownerId) {
-        Owner owner = (Owner) User.find(ownerId);
-        return ResponseEntity.ok(owner.getPets());
+        Owner owner = Owner.find(ownerId);
+        return ResponseEntity.ok(owner.pets());
     }
 
     @GetMapping("/{id}")
@@ -27,8 +28,8 @@ public class PetController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Pet> savePet(@RequestBody Pet pet) {
-        return ResponseEntity.ok((Pet) pet.save());
+    public ResponseEntity<Pet> savePet(@RequestBody PetDto petDto) {
+        return ResponseEntity.ok(Pet.newPet(petDto, User.find(petDto.getUserId())));
     }
 
     @DeleteMapping("/{id}/delete")

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `last_name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `address` VARCHAR(250) NOT NULL,
-  `active` TINYINT(1) NOT NULL DEFAULT 1
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`user_id`))
 ENGINE = InnoDB;
 

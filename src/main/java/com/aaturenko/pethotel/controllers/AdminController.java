@@ -1,8 +1,8 @@
 package com.aaturenko.pethotel.controllers;
 
 import com.aaturenko.pethotel.entities.Admin;
+import com.aaturenko.pethotel.entities.Sitter;
 import com.aaturenko.pethotel.entities.User;
-import com.aaturenko.pethotel.old.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +19,12 @@ public class AdminController {
 
     @PutMapping("/block-user/{userId}")
     public ResponseEntity<?> blockUser(@PathVariable long userId) {
-        admin.blockUser(User.find(userId));
+        admin.blockUser(Sitter.find(userId));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/users-to-block")
-    public List<User> showUsersToBlock() {
-        return admin.showUsersToBlock();
+    public ResponseEntity<List<User>> showUsersToBlock() {
+        return ResponseEntity.ok(admin.showUsersToBlock());
     }
 }

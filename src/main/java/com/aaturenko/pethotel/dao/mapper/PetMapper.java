@@ -1,5 +1,6 @@
 package com.aaturenko.pethotel.dao.mapper;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.Pet;
 import com.aaturenko.pethotel.entities.User;
@@ -14,7 +15,7 @@ import java.util.List;
 public class PetMapper extends DataMapper {
     private static final String TABLE_NAME = "pet";
     private static final String PK_COLUMN_NAME = "pet_id";
-    private static final String COLUMNS = PK_COLUMN_NAME + ", pet_type, name, age, passport, user_id";
+    private static final String COLUMNS = "pet_type, name, age, passport, user_id";
     private static final String DDL = "(?, ?, ?, ?, ?, ?)";
 
     public PetMapper(Connection dbConnection, boolean useEntitiesCache) {
@@ -24,7 +25,6 @@ public class PetMapper extends DataMapper {
     @Override
     protected void doInsert(Entity entity, PreparedStatement st) throws SQLException {
         Pet pet = (Pet) entity;
-
         int i = 0;
         st.setLong(++i, pet.getId());
         st.setString(++i, pet.getPetType().toString());
@@ -73,5 +73,10 @@ public class PetMapper extends DataMapper {
     @Override
     protected String getColumnNames() {
         return COLUMNS;
+    }
+
+    @Override
+    protected String getUpdateColumns() {
+        return null;
     }
 }

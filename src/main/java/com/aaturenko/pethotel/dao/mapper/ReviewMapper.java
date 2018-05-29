@@ -1,5 +1,6 @@
 package com.aaturenko.pethotel.dao.mapper;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.Review;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ReviewMapper extends DataMapper {
     private static final String TABLE_NAME = "review";
     private static final String PK_COLUMN_NAME = "review_id";
-    private static final String COLUMNS = PK_COLUMN_NAME + ", like, comment, user_id";
+    private static final String COLUMNS = "review.like, comment, user_id";
     private static final String DDL = "(?, ?, ?, ?)";
 
 
@@ -24,7 +25,12 @@ public class ReviewMapper extends DataMapper {
 
     @Override
     protected void doInsert(Entity entity, PreparedStatement st) throws SQLException {
-        setColumns((Review) entity, st);
+        Review review = (Review) entity;
+        int i = 0;
+        st.setLong(++i, review.getId());
+        st.setBoolean(++i, review.isLike());
+        st.setString(++i, review.getComment());
+        st.setLong(++i, review.getUser().getId());
     }
 
     @Override
@@ -34,15 +40,13 @@ public class ReviewMapper extends DataMapper {
 
     private void setColumns(Review review, PreparedStatement st) throws SQLException{
         st.setLong(1, review.getId());
-        st.setBoolean(2, review.isLike());
-        st.setString(3, review.getComment());
-        st.setLong(4, review.getUser().getId());
+
     }
 
     @Override
     protected Entity doLoad(long id, ResultSet rs) throws SQLException {
         UserMapper userMapper = (UserMapper) DataMapperRegistry.getMapper(User.class);
-        User user = (User) userMapper.findById(rs.getLong("userId"));
+        User user = (User) userMapper.findById(rs.getLong("user_id"));
 
         return Review.builder()
                 .id(id)
@@ -52,8 +56,8 @@ public class ReviewMapper extends DataMapper {
                 .build();
     }
 
-    public List<Review> findAllByLike(boolean like) {
-        return findAllByCustomWhere("like = ?", like);
+    public List<Review> findAllByLike(Boolean like) {
+        return findAllByCustomWhere("review.like = ?", like.toString());
     }
 
     public List<Review> findAllByUser(User user) {
@@ -78,5 +82,10 @@ public class ReviewMapper extends DataMapper {
     @Override
     protected String getColumnNames() {
         return COLUMNS;
+    }
+
+    @Override
+    protected String getUpdateColumns() {
+        throw new UnsupportedOperationException("Reviews are immutable");
     }
 }

@@ -1,12 +1,19 @@
-package com.aaturenko.pethotel.dao.mapper;
+package com.aaturenko.pethotel.dao;
 
-import com.aaturenko.pethotel.dao.DBConnection;
 import com.aaturenko.pethotel.entities.Entity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class DataMapper {
 
@@ -23,7 +30,7 @@ public abstract class DataMapper {
     protected abstract String getDDL();
 
     protected String getCreateQuery() {
-        return "INSERT INTO " + getTableName() + " VALUES " + getDDL();
+        return "INSERT INTO " + getTableName() + " (" + getPrimaryKeyColumnName() + ", " + getColumnNames() + ") " + " VALUES " + getDDL();
     }
 
     protected abstract String getTableName();
@@ -33,9 +40,12 @@ public abstract class DataMapper {
     protected abstract String getColumnNames();
 
     protected String getUpdateQuery() {
-        return "UPDATE " + getTableName() + " SET (" + getColumnNames() + ") = " + getDDL() +" WHERE "
+        return "UPDATE " + getTableName() + " SET "+ getUpdateColumns() +" WHERE "
                 + getPrimaryKeyColumnName() + "=?";
-    };
+    }
+
+    protected abstract String getUpdateColumns();
+
 
     protected String getReadQuery() {
         String pk = getPrimaryKeyColumnName();
@@ -80,29 +90,50 @@ public abstract class DataMapper {
         return result;
     }
 
-    public Entity insert(final Entity entity) {
+    private void insert(final Entity entity) {
         try (PreparedStatement insertStatement = dbConnection.prepareStatement(getCreateQuery())){
+            log.info("QUERY: {}", getCreateQuery());
             doInsert(entity, insertStatement);
-            insertStatement.execute();
-            if (useEntitiesCache) entitiesCache.put(entity.getId(), entity);
+            insertStatement.executeUpdate();
         } catch (SQLException e) {
             DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
-
-        return entitiesCache.get(entity.getId());
     }
 
     public Entity save(final Entity entity) {
-        final Entity existingObject = findById(entity.getId());
+        final Entity existingObject = tryToFindById(dbConnection, entity.getId());
         if (existingObject == null) {
-            return insert(entity);
+            Entity newEntity = null;
+            long maxId = getMaxId() + 1;
+            if (maxId > 1) {
+                entity.setId(maxId);
+                insert(entity);
+                newEntity = findById(maxId);
+                if (useEntitiesCache) entitiesCache.put(maxId, newEntity);
+            }
+            return newEntity;
         } else {
             return update(entity);
         }
     }
 
-    public Entity update(final Entity entity) {
+    private long getMaxId()  {
+        long maxId = 0;
+        String sql = "select max(" + getPrimaryKeyColumnName() + ") as max from " + getTableName();
+        try (PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                maxId = resultSet.getLong("max");
+            }
+        } catch (SQLException e) {
+            DBConnection.closeConnection();
+            throw new RuntimeException(e);
+        }
+        return maxId;
+    }
+
+    private Entity update(final Entity entity) {
         try (PreparedStatement updateStatement = dbConnection.prepareStatement(getUpdateQuery())) {
             doUpdate(entity, updateStatement);
             updateStatement.execute();
@@ -166,9 +197,11 @@ public abstract class DataMapper {
         return findStatement;
     }
 
-    protected Entity findOneByCustomWhere(String tableName, String whereClause, Object... args) {
+    protected Entity findOneByCustomWhereJoin(String tableName, String whereClause, Object... args) {
         String query =
-                "SELECT " + getPrimaryKeyColumnName() + " FROM " + tableName + " WHERE " + whereClause;
+                "SELECT " + getTableName() + "." + getPrimaryKeyColumnName() + " FROM " + tableName + " WHERE " + whereClause;
+
+        log.info("QUERY: {}", query);
         try (PreparedStatement findStatement = prepareCustomStatement(dbConnection, query, args)) {
             ResultSet rs = findStatement.executeQuery();
             if (rs.next()) {
@@ -182,8 +215,8 @@ public abstract class DataMapper {
         }
     }
 
-    protected Entity findOneByCustomWhere(String whereClause, Object... args) {
-        return findOneByCustomWhere(getTableName(), whereClause, args);
+    public Entity findOneByCustomWhere(String whereClause, Object... args) {
+        return findOneByCustomWhereJoin(getTableName(), whereClause, args);
     }
 
 }

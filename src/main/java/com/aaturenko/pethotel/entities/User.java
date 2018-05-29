@@ -1,15 +1,15 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.UserMapper;
 import com.aaturenko.pethotel.dto.ReviewDto;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
+
 @EqualsAndHashCode(callSuper = true)
 public abstract class User extends Entity {
 
@@ -18,11 +18,11 @@ public abstract class User extends Entity {
     protected String email;
     protected Boolean active;
     protected String address;
-    protected List<Review> reviewsAboutMe;
+    protected List<Review> reviewsAboutMe = new ArrayList<>();
 
     private static UserMapper userMapper = (UserMapper) DataMapperRegistry.getMapper(User.class);
 
-    public DataMapper getMapper() {
+    public DataMapper dataMapper() {
         return userMapper;
     }
 
@@ -37,7 +37,11 @@ public abstract class User extends Entity {
 
     public void changeStatus(boolean active) {
         this.setActive(active);
-        update();
+        save();
+    }
+
+    public static User find(long id) {
+        return (User) userMapper.findById(id);
     }
 
     public abstract void block();
@@ -52,7 +56,7 @@ public abstract class User extends Entity {
         return review;
     }
 
-    public List<Review> getReviewsAboutMe() {
+    public List<Review> reviewsAboutMe() {
         if (reviewsAboutMe == null)
             reviewsAboutMe = Review.findAllByUser(this);
         return reviewsAboutMe;
@@ -60,14 +64,6 @@ public abstract class User extends Entity {
 
     public static List<User> findAll(){
         return userMapper.findAll();
-    }
-
-    public static User find(long id) {
-        return (User) userMapper.findById(id);
-    }
-
-    public static User findByEmail(String email) {
-        return userMapper.findByEmail(email);
     }
 
     public static abstract class UserBuilder {
@@ -112,5 +108,45 @@ public abstract class User extends Entity {
 
         public abstract User build();
 
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

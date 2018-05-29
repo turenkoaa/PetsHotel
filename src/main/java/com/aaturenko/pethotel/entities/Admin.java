@@ -26,7 +26,7 @@ public class Admin {
             List<User> usersToBlock = new ArrayList<>();
 
             User.findAll().forEach(u -> {
-                long dislikes = u.getReviewsAboutMe().stream()
+                long dislikes = u.reviewsAboutMe().stream()
                         .filter(r -> !r.isLike())
                         .count();
                 if (dislikes > 10) usersToBlock.add(u);
@@ -42,6 +42,7 @@ public class Admin {
             return Review.showDislikedReviews()
                     .stream()
                     .map(Review::getUser)
+                    .distinct()
                     .collect(toList());
         }
     }

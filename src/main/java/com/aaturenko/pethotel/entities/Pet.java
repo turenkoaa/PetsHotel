@@ -1,17 +1,14 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.PetMapper;
 import com.aaturenko.pethotel.dto.PetDto;
 import com.aaturenko.pethotel.enums.PetType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -59,7 +56,7 @@ public class Pet extends Entity {
     }
 
     @Override
-    public DataMapper getMapper() {
+    public DataMapper dataMapper() {
         return petMapper;
     }
 

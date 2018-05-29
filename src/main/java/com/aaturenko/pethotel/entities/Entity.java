@@ -1,25 +1,24 @@
 package com.aaturenko.pethotel.entities;
 
-import com.aaturenko.pethotel.dao.mapper.DataMapper;
+import com.aaturenko.pethotel.dao.DataMapper;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Data
-public abstract class Entity {
+@NoArgsConstructor
+public abstract class Entity implements Serializable {
 
     protected long id;
 
-    public void update(){
-        getMapper().update(this);
-    }
-
     public void delete(){
-        getMapper().delete(this);
+        dataMapper().delete(this);
     }
 
     public Entity save(){
-        return getMapper().save(this);
+        return dataMapper().save(this);
     }
 
     public Entity(long id) {
@@ -39,5 +38,5 @@ public abstract class Entity {
         return Objects.hash(id);
     }
 
-    public abstract DataMapper getMapper();
+    public abstract DataMapper dataMapper();
 }

@@ -1,7 +1,7 @@
 package com.aaturenko.pethotel.entities;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.dao.mapper.DataMapper;
 import com.aaturenko.pethotel.dao.mapper.ReviewMapper;
 import com.aaturenko.pethotel.dto.ReviewDto;
 import lombok.Data;
@@ -53,7 +53,7 @@ public class Review extends Entity {
     }
 
     @Override
-    public DataMapper getMapper() {
+    public DataMapper dataMapper() {
         return reviewMapper;
     }
 

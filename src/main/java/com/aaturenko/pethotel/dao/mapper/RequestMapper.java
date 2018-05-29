@@ -1,18 +1,17 @@
 package com.aaturenko.pethotel.dao.mapper;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.entities.*;
 import com.aaturenko.pethotel.enums.RequestStatus;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import java.sql.*;
-import java.sql.Date;
 import java.util.List;
 
 public class RequestMapper extends DataMapper {
     private static final String TABLE_NAME = "request";
     private static final String PK_COLUMN_NAME = "request_id";
-    private static final String COLUMNS = PK_COLUMN_NAME + ", start_date, end_date, status, pet_id, user_id, cost";
+    private static final String COLUMNS = "start_date, end_date, status, pet_id, user_id, cost";
     private static final String DDL = "(?, ?, ?, ?, ?, ?, ?)";
 
     public RequestMapper(Connection connection, boolean useCache) {
@@ -21,9 +20,19 @@ public class RequestMapper extends DataMapper {
 
     @Override
     protected void doInsert(Entity entity, PreparedStatement st) throws SQLException {
-        Request request = (Request) entity;
-
         int i = 0;
+        setColumns(st, (Request) entity, i);
+    }
+
+    @Override
+    protected void doUpdate(Entity entity, PreparedStatement st) throws SQLException {
+        int i = 0;
+        Request request = (Request) entity;
+        i = setColumns(st, request, i);
+        st.setLong(++i, request.getId());
+    }
+
+    private int setColumns(PreparedStatement st, Request request, int i) throws SQLException {
         st.setLong(++i, request.getId());
         st.setDate(++i, Date.valueOf(request.getStartDate()));
         st.setDate(++i, Date.valueOf(request.getEndDate()));
@@ -31,11 +40,7 @@ public class RequestMapper extends DataMapper {
         st.setLong(++i, request.getPet().getId());
         st.setLong(++i, request.getUser().getId());
         st.setInt(++i, request.getCost());
-    }
-
-    @Override
-    protected void doUpdate(Entity entity, PreparedStatement st) {
-        throw new UnsupportedOperationException("Request is immutable");
+        return i;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class RequestMapper extends DataMapper {
     }
 
     public Request findByResponse(Response response) {
-        return (Request) findOneByCustomWhere("request rq, response rs", "rq.request_id = rs.request_id and response_id = ?", response.getId()); // findOneByCustomWhere("status = ?", requestStatus.toString());
+        return (Request) findOneByCustomWhereJoin("request, response", "request.request_id = response.request_id and response_id = ?", response.getId()); // findOneByCustomWhereJoin("status = ?", requestStatus.toString());
     }
 
     @Override
@@ -85,10 +90,8 @@ public class RequestMapper extends DataMapper {
         return COLUMNS;
     }
 
-
-
     @Override
-    protected String getUpdateQuery() {
-        throw new UnsupportedOperationException("Request is immutable");
+    protected String getUpdateColumns() {
+        return "request_id=?, start_date=?, end_date=?, status=?, pet_id=?, user_id=?, cost=?";
     }
 }

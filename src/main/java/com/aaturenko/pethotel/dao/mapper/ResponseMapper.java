@@ -1,10 +1,8 @@
 package com.aaturenko.pethotel.dao.mapper;
 
+import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
-import com.aaturenko.pethotel.entities.Entity;
-import com.aaturenko.pethotel.entities.Request;
-import com.aaturenko.pethotel.entities.Response;
-import com.aaturenko.pethotel.entities.User;
+import com.aaturenko.pethotel.entities.*;
 import com.aaturenko.pethotel.enums.ResponseStatus;
 
 import java.sql.Connection;
@@ -16,7 +14,7 @@ import java.util.List;
 public class ResponseMapper extends DataMapper {
     private static final String TABLE_NAME = "response";
     private static final String PK_COLUMN_NAME = "response_id";
-    private static final String COLUMNS = PK_COLUMN_NAME + ", status, details, request_id, user_id, cost";
+    private static final String COLUMNS = "status, details, request_id, user_id, cost";
     private static final String DDL = "(?, ?, ?, ?, ?, ?)";
 
     public ResponseMapper(Connection connection, boolean useCache) {
@@ -25,12 +23,25 @@ public class ResponseMapper extends DataMapper {
 
     @Override
     protected void doInsert(Entity entity, PreparedStatement st) throws SQLException {
-        setColumns((Response) entity, st);
+        setColumns(st, (Response) entity, 0);
     }
 
     @Override
     protected void doUpdate(Entity entity, PreparedStatement st) throws SQLException {
-        setColumns((Response) entity, st);
+        int i = 0;
+        Response response = (Response) entity;
+        i = setColumns(st, response, i);
+        st.setLong(++i, response.getId());
+    }
+
+    private int setColumns(PreparedStatement st, Response response, int i) throws SQLException {
+        st.setLong(++i, response.getId());
+        st.setString(++i, response.getStatus().toString());
+        st.setString(++i, response.getDetails());
+        st.setLong(++i, response.request().getId());
+        st.setLong(++i, response.getUser().getId());
+        st.setInt(++i, response.getCost());
+        return i;
     }
 
     public List<Response> findAllByRequest(Request request) {
@@ -41,20 +52,10 @@ public class ResponseMapper extends DataMapper {
         return findAllByCustomWhere("user_id = ?", user.getId());
     }
 
-    private void setColumns(Response response, PreparedStatement st) throws SQLException {
-        int i = 0;
-        st.setLong(++i, response.getId());
-        st.setString(++i, response.getStatus().toString());
-        st.setString(++i, response.getDetails());
-        st.setLong(++i, response.getRequest().getId());
-        st.setLong(++i, response.getUser().getId());
-        st.setInt(++i, response.getCost());
-    }
-
     @Override
     protected Entity doLoad(long id, ResultSet rs) throws SQLException {
-        UserMapper userMapper = (UserMapper) DataMapperRegistry.getMapper(User.class);
-        User user = (User) userMapper.findById(rs.getLong("userId"));
+        UserMapper userMapper = (UserMapper) DataMapperRegistry.getMapper(Sitter.class);
+        User user = (User) userMapper.findById(rs.getLong("user_id"));
 
         return Response.builder()
                 .id(id)
@@ -82,4 +83,10 @@ public class ResponseMapper extends DataMapper {
     protected String getColumnNames() {
         return COLUMNS;
     }
+
+    @Override
+    protected String getUpdateColumns() {
+        return "response_id=?, status=?, details=?, request_id=?, user_id=?, cost=?";
+    }
+
 }
