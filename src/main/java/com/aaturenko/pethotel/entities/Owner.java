@@ -60,6 +60,10 @@ public class Owner extends User {
         return requests;
     }
 
+    public void confirmPayment(Request request) {
+        request.paidConfirmed();
+    }
+
     public static Owner find(long id) {
         return (Owner) userMapper.findById(id);
     }

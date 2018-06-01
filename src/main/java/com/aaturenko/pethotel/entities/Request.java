@@ -22,17 +22,19 @@ public class Request extends Entity {
     private Pet pet;
     private int cost;
     private User user;
+    private boolean paid;
     private List<Response> responses;
 
     private UpdateRequestStatusStrategy statusStrategy = new ValidResponseUpdateRequestStatusStrategy();
     private static RequestMapper requestMapper = (RequestMapper) DataMapperRegistry.getMapper(Request.class);
 
-    public Request(long id, LocalDate startDate, LocalDate endDate, RequestStatus status, Pet pet, int cost) {
+    public Request(long id, LocalDate startDate, LocalDate endDate, RequestStatus status, boolean paid, Pet pet, int cost) {
         super(id);
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
         this.pet = pet;
+        this.paid = paid;
         this.cost = cost;
     }
 
@@ -90,6 +92,11 @@ public class Request extends Entity {
         return (Request) requestMapper.save(request);
     }
 
+    public void paidConfirmed() {
+        this.setPaid(true);
+        save();
+    }
+
     public static Request findByResponse(Response response) {
         return requestMapper.findByResponse(response);
     }
@@ -112,11 +119,13 @@ public class Request extends Entity {
                     .endDate(dto.getEndDate())
                     .status(RequestStatus.NEW)
                     .cost(dto.getCost())
+                    .paid(false)
                     .build();
 
     public static RequestBuilder builder() {
         return new RequestBuilder();
     }
+
     public static class RequestBuilder {
         private long id;
         private LocalDate startDate;
@@ -124,13 +133,18 @@ public class Request extends Entity {
         private RequestStatus status;
         private Pet pet;
         private int cost;
-
+        private boolean paid;
 
         RequestBuilder() {
         }
 
         public RequestBuilder id(long id) {
             this.id = id;
+            return this;
+        }
+
+        public RequestBuilder paid(boolean paid) {
+            this.paid = paid;
             return this;
         }
 
@@ -159,7 +173,7 @@ public class Request extends Entity {
             return this;
         }
         public Request build() {
-            return new Request(id, startDate, endDate, status, pet, cost);
+            return new Request(id, startDate, endDate, status, paid, pet, cost);
         }
 
     }
@@ -236,5 +250,13 @@ public class Request extends Entity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 }

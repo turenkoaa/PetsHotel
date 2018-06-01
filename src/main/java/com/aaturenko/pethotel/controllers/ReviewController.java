@@ -18,6 +18,5 @@ public class ReviewController {
     @PostMapping("/save")
     public ResponseEntity<Review> addReview(@RequestBody ReviewDto reviewDto){
         return ResponseEntity.ok(User.find(reviewDto.getUserId()).addReview(reviewDto));
-
     }
 }

@@ -3,7 +3,9 @@ package com.aaturenko.pethotel.controllers;
 import com.aaturenko.pethotel.dto.RequestDto;
 import com.aaturenko.pethotel.entities.Owner;
 import com.aaturenko.pethotel.entities.Request;
+import com.aaturenko.pethotel.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +62,20 @@ public class RequestController {
     public ResponseEntity<?> acceptResponse(@PathVariable long id, @PathVariable long responseId) {
         Request.find(id).acceptResponse(responseId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Autowired
+    PaymentService paymentService;
+
+    @PutMapping("/{id}/paid")
+    public ResponseEntity<?> paidConfirmed(@PathVariable long id) {
+        Request request = Request.find(id);
+        boolean paymentSuccess = paymentService.pay(request.getUser(), request.getCost());
+        if (paymentSuccess) {
+            request.paidConfirmed();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }

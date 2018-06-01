@@ -11,8 +11,8 @@ import java.util.List;
 public class RequestMapper extends DataMapper {
     private static final String TABLE_NAME = "request";
     private static final String PK_COLUMN_NAME = "request_id";
-    private static final String COLUMNS = "start_date, end_date, status, pet_id, user_id, cost";
-    private static final String DDL = "(?, ?, ?, ?, ?, ?, ?)";
+    private static final String COLUMNS = "start_date, end_date, status, pet_id, user_id, paid, cost";
+    private static final String DDL = "(?, ?, ?, ?, ?, ?, ?, ?)";
 
     public RequestMapper(Connection connection, boolean useCache) {
         super(connection, useCache);
@@ -39,6 +39,7 @@ public class RequestMapper extends DataMapper {
         st.setString(++i, request.getStatus().toString());
         st.setLong(++i, request.getPet().getId());
         st.setLong(++i, request.getUser().getId());
+        st.setBoolean(++i, request.isPaid());
         st.setInt(++i, request.getCost());
         return i;
     }
@@ -54,6 +55,7 @@ public class RequestMapper extends DataMapper {
                 .endDate(rs.getDate("end_date").toLocalDate())
                 .status(RequestStatus.valueOf(rs.getString("status")))
                 .pet(pet)
+                .paid(rs.getBoolean("paid"))
                 .cost(rs.getInt("cost"))
                 .build();
     }
@@ -92,6 +94,6 @@ public class RequestMapper extends DataMapper {
 
     @Override
     protected String getUpdateColumns() {
-        return "request_id=?, start_date=?, end_date=?, status=?, pet_id=?, user_id=?, cost=?";
+        return "request_id=?, start_date=?, end_date=?, status=?, pet_id=?, user_id=?, paid=?, cost=?";
     }
 }
