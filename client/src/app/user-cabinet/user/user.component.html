@@ -1,0 +1,18 @@
+<ng-container *ngIf="user">
+    <label>Name: </label>
+    {{user.firstName}} {{user.lastName}}
+    <br>
+    <div>
+      <span>Email: </span>
+      {{user.email}}
+      <br>
+      <span>User active: </span> {{user.active}}
+      <br>
+      <span>User address: </span> {{user.address}}
+    </div>
+    <br>
+    <ng-container *ngIf="isAdmin">
+        <button mat-raised-button (click)="blockUser()">Block</button>
+    </ng-container>
+  </ng-container>
+  

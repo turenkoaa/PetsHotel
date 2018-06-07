@@ -1,0 +1,8 @@
+<h2>New Requests</h2>
+<button mat-raised-button (click)="refresh()">Refresh</button>
+<br>
+<div *ngFor="let request of requests">
+  <mat-card>
+      <app-request [request]="request" [isNew]="true"></app-request>
+  </mat-card>    
+</div>

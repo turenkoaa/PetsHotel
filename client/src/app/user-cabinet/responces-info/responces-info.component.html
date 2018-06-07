@@ -1,0 +1,21 @@
+<h2>My Responses</h2>
+<button mat-raised-button (click)="refresh()">Refresh</button>
+<br>
+<div *ngFor="let response of responses">
+  <mat-card>
+      <span>Author: </span> {{response.user.firstName}} {{response.user.lastName}}
+      <br>
+      <span>Response status: </span> {{response.status}}
+      <br>
+      <span>Response details: </span> {{response.details}}
+      <br>
+      <span>Response cost: </span>{{response.cost}}
+      <br>
+      <span>Request start day: </span>{{response.request.startDate}}
+      <br>
+      <span>Request end day: </span>{{response.request.endDate}}
+      <br>
+      <span>Request cost: </span>{{response.request.cost}}
+      <br>
+  </mat-card>    
+</div>

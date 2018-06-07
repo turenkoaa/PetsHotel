@@ -1,0 +1,13 @@
+
+<div>
+  <h2>{{item.name}}</h2>
+  <h3>{{item.description}}</h3>
+  <button mat-raised-button *ngIf="!showAnswer" (click)="addAnswer()">Add Answer</button>
+  <div *ngIf="showAnswer">
+      <mat-divider></mat-divider>
+      <mat-form-field class="example-full-width">
+        <br>
+          <input matInput placeholder="Input your anser">
+        </mat-form-field>
+      </div>
+</div>

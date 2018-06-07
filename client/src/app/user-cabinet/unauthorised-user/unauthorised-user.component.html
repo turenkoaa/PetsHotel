@@ -1,0 +1,11 @@
+<h2>User Info</h2>
+<ng-container *ngIf="user">
+  <app-user [user]="user" [isAdmin]="false"></app-user>
+  <mat-form-field>
+    <input matInput placeholder="Enter a comment" [formControl]="comment">
+  </mat-form-field>
+  <ng-container *ngIf="!cliked">
+    <button mat-raised-button (click)="onLike()">Like</button>
+    <button mat-raised-button (click)="onDislike()">Dislike</button>
+  </ng-container>
+</ng-container>

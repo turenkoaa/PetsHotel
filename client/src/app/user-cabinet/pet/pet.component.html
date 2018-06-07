@@ -1,0 +1,20 @@
+<ng-container *ngIf="show">
+    <label>Pet's name: </label> {{pet.name}}
+    <br>
+    <label>Pet's age: </label> {{pet.age}}
+    <br>
+    <label>Pet's passport</label> {{pet.passport}}
+    <br>
+    <mat-form-field>
+        <input matInput placeholder="Enter a start date" [formControl]="startDate">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+        <input matInput placeholder="Enter a end date" [formControl]="endDate">
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+        <input matInput placeholder="Enter a cost" [formControl]="cost">
+    </mat-form-field>
+    <button mat-raised-button (click)="addRequest()">Add request</button>
+</ng-container>

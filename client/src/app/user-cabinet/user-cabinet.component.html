@@ -1,0 +1,28 @@
+<ng-container *ngIf="usersReady">
+  <button mat-button [matMenuTriggerFor]="menu">Select user</button>
+  <mat-menu #menu="matMenu" >
+    <button mat-menu-item *ngFor="let user of allUsers" (click)="userSelect(user)">{{user.firstName}} {{user.lastName}}</button>
+  </mat-menu>
+</ng-container>
+<app-unauthorised-user *ngIf="!isOwner"></app-unauthorised-user>
+<ng-container *ngIf="isOwner">
+  <mat-card>
+    <app-user-info></app-user-info>
+
+  </mat-card>
+  <mat-card>
+    <app-pets-info></app-pets-info>
+
+  </mat-card>
+  <mat-card>
+    <app-requests-info></app-requests-info>
+
+  </mat-card>
+  <mat-card>
+    <app-responces-info></app-responces-info>
+
+  </mat-card>
+  <mat-card>
+    <app-requests-new></app-requests-new>
+  </mat-card>
+</ng-container>

@@ -1,0 +1,6 @@
+<ng-container>
+  <button mat-button (click)="addItem()">Add Item</button>
+  <mat-card *ngFor="let item of items">
+    <app-pets-item [item]=item></app-pets-item>
+  </mat-card>
+</ng-container>

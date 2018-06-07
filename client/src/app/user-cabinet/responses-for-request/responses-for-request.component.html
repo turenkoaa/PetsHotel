@@ -1,0 +1,11 @@
+<div *ngFor="let response of responses">
+    <mat-card>
+        <app-response [response]="response" [requestId]="requestId"></app-response>
+        <ng-container *ngIf="!requestClosed">
+            <ng-container *ngIf="response.status === 'ACCEPTED'" >
+                <button mat-raised-button (click)="pay()">Pay</button>
+            </ng-container>
+            <button mat-raised-button (click)="accepResponse(response.id)">Accept</button>
+        </ng-container>
+    </mat-card>    
+  </div>

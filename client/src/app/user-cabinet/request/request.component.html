@@ -1,0 +1,29 @@
+<span>Request start date: </span> {{request.startDate}}
+<br>
+<span>Request end date: </span> {{request.endDate}}
+<br>
+<span>Request status: </span> {{request.status}}
+<br>
+<span>Request cost: </span> {{request.cost}}
+<br>
+<span>Is paid: </span> {{request.paid}}
+<br>
+<ng-container *ngIf="!isNew">
+  <button mat-raised-button (click)="showResponces()">Show responses</button>
+  <button mat-raised-button *ngIf="!request.paid" (click)="rejectAll()">Reject all</button>
+  <button mat-raised-button *ngIf="rejected" (click)="cancelRequest()">Cancel</button>
+  <ng-container *ngIf="showResponse">
+    <app-responses-for-request [requestId]="request.id" [requestClosed]="request.paid"></app-responses-for-request>
+  </ng-container>
+</ng-container>
+<ng-container *ngIf="isNew">
+  <span>User Name: </span> {{request.user.firstName}} {{request.user.lastName}}
+  <br>
+  <span>User email:</span> {{request.user.email}}
+  <br>
+  <span>Kind of pet:</span> {{request.pet.petType}}
+  <br>
+  <ng-container *ngIf="!blockedUser">
+    <button mat-raised-button (click)="createResponse()">Add Response</button>
+  </ng-container>
+</ng-container>
