@@ -5,13 +5,13 @@ SET NAMES utf8;
 -- Data for table `user`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (1, 'Морозова', 'Виолетта', 'Дыбенко', 1, 'CUSTOMER', 'morozova@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (2, 'Иванова', 'Мария', 'Проспект Просвящения', 1, 'CUSTOMER', 'ivanova@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (3, 'Михайлов', 'Виктор', 'Проспект Большевиков', 1, 'CUSTOMER', 'mihailov@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (4, 'Смирнова', 'Валерия', 'Ладожская', 1, 'CUSTOMER', 'smirnova@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (5, 'Кузнецов', 'Сергей', 'Дыбенко', 1, 'CUSTOMER', 'kuznetsov@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (6, 'Торопов', 'Иван', 'Удельная', 0, 'CUSTOMER', 'toropov@smth.com');
-INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `user_type`, `email`) VALUES (7, 'админ', 'админ', '-', 1, 'ADMIN', 'admin@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (1, 'Морозова', 'Виолетта', 'Дыбенко', 1, 'morozova@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (2, 'Иванова', 'Мария', 'Проспект Просвящения', 1, 'ivanova@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (3, 'Михайлов', 'Виктор', 'Проспект Большевиков', 1, 'mihailov@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (4, 'Смирнова', 'Валерия', 'Ладожская', 1, 'smirnova@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (5, 'Кузнецов', 'Сергей', 'Дыбенко', 1, 'kuznetsov@smth.com');
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (6, 'Торопов', 'Иван', 'Удельная', 0, 'toropov@smth.com');
+-- INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `address`, `active`, `email`) VALUES (7, 'админ', 'админ', '-', 1, 'admin@smth.com');
 
 COMMIT;
 
@@ -32,20 +32,9 @@ COMMIT;
 -- Data for table `request`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `cost`) VALUES (1, '2018-05-12', '2018-05-25', DEFAULT, 1, 300);
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `cost`) VALUES (2, '2018-06-1', '2018-06-5', DEFAULT, 2, 1200);
-INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `cost`) VALUES (3, '2016-06-1', '2016-07-1', 'ANULLED', 5, 2000);
-
-COMMIT;
-
--- -----------------------------------------------------
--- Data for table `pet_request`
--- -----------------------------------------------------
-
-START TRANSACTION;
-INSERT INTO `pet_request` (`request_id`, `pet_id`) VALUES (1, 1);
-INSERT INTO `pet_request` (`request_id`, `pet_id`) VALUES (2, 3);
-INSERT INTO `pet_request` (`request_id`, `pet_id`) VALUES (3, 4);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `pet_id`,`cost`) VALUES (1, '2018-05-12', '2018-05-25', DEFAULT, 1, 1, 300);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `pet_id`,`cost`) VALUES (2, '2018-06-1', '2018-06-5', DEFAULT, 2, 3, 1200);
+INSERT INTO `request` (`request_id`, `start_date`, `end_date`, `status`, `user_id`, `pet_id`,`cost`) VALUES (3, '2016-06-1', '2016-07-1', 'ANULLED', 5, 4, 2000);
 
 COMMIT;
 
@@ -58,3 +47,11 @@ INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_
 INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`, `cost`) VALUES (3, 'REJECTED', NULL, 3, 6, 1800);
 
 COMMIT;
+
+START TRANSACTION;
+INSERT INTO `review` (`review_id`, `like`, `comment`, `user_id`) VALUES (1, 0, 'doesnt like', 1);
+INSERT INTO `review` (`review_id`, `like`, `comment`, `user_id`) VALUES (2, 1, 'good', 2);
+INSERT INTO `review` (`review_id`, `like`, `comment`, `user_id`) VALUES (3, 0, 'fail', 3);
+
+COMMIT;
+

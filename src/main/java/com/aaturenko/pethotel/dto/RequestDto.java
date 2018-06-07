@@ -5,25 +5,32 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class RequestDto {
+    private long userId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<Long> petsIds;
+    private Long petId;
     private int cost;
 
     public static RequestDtoBuilder builder() {
         return new RequestDtoBuilder();
     }
 
+    public RequestDto(LocalDate startDate, LocalDate endDate, Long petId, int cost) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.petId = petId;
+        this.cost = cost;
+    }
+
     public static class RequestDtoBuilder {
         private LocalDate startDate;
         private LocalDate endDate;
-        private List<Long> petsIds;
+        private Long petsId;
         private int cost;
 
         RequestDtoBuilder() {}
@@ -38,8 +45,8 @@ public class RequestDto {
             return this;
         }
 
-        public RequestDtoBuilder petsIds(List<Long> petsIds) {
-            this.petsIds = petsIds;
+        public RequestDtoBuilder petsIds(Long petsId) {
+            this.petsId = petsId;
             return this;
         }
 
@@ -49,7 +56,7 @@ public class RequestDto {
         }
 
         public RequestDto build() {
-            return new RequestDto(startDate, endDate, petsIds, cost);
+            return new RequestDto(startDate, endDate, petsId, cost);
         }
     }
 }

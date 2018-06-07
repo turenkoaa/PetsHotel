@@ -1,72 +1,67 @@
 package com.aaturenko.pethotel.services;
 
-import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
-import com.aaturenko.pethotel.exceptions.UniqueNameException;
-import com.aaturenko.pethotel.models.Pet;
-import com.aaturenko.pethotel.models.User;
+import com.aaturenko.pethotel.dto.PetDto;
+import com.aaturenko.pethotel.entities.Pet;
+import com.aaturenko.pethotel.entities.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import static com.aaturenko.pethotel.enums.PetType.CAT;
 import static com.aaturenko.pethotel.services.utils.EntitiesFactory.createNewExamplePet;
 import static com.aaturenko.pethotel.services.utils.EntitiesFactory.createNewExampleUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.TestCase.assertNull;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.*;
 
-public class PetServiceTest extends DatabaseTest{
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PetService petService;
+public class PetServiceTest extends DatabaseTest {
 
     private Pet savedPet;
     private User savedUser;
 
     @Before
     public void initDb() {
-        savedUser = userService.saveOrUpdateUser(createNewExampleUser.get());
-        savedPet = petService.saveOrUpdatePet(
-                createNewExamplePet.get()
-                        .setOwner(savedUser)
-        );
+        savedUser = (User) createNewExampleUser.get().save();
+        PetDto petDto = new PetDto()
+                .setAge(9)
+                .setName("test")
+                .setPassport("123456789")
+                .setPetType(CAT.toString())
+                .setUserId(savedUser.getId());
+        savedPet = Pet.newPet(petDto, savedUser);
+        savedPet.setUser(savedUser);
     }
 
     @After
     public void deleteDb() {
-        userService.deleteUserById(savedPet.getOwner().getId());
+        savedUser.delete();
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void petSuccessfullySavedUpdatedAndDeleted () {
         //check saving
         Long savedPetId = savedPet.getId();
         assertTrue(savedPetId > 0);
-        assertEquals(savedPet.getOwner().getEmail(), savedUser.getEmail());
+        assertEquals(savedPet.getUser().getEmail(), savedUser.getEmail());
 
         //updating and finding
         savedPet.setName("Петя");
-        petService.saveOrUpdatePet(savedPet);
-        assertEquals(petService.findPetById(savedPetId).getName(), "Петя");
-    }
-
-    @Test(expected = EntityNotFoundException.class)
-    public void petNotFoundById () {
-        petService.findPetById(9999999999999L);
+        savedPet.save();
+        assertEquals(Pet.find(savedPetId).getName(), "Петя");
     }
 
     @Test
-    public void petNotFoundByOwner () {
-        assertTrue(petService.findPetsByOwnerId(9999999999999L, 0, 2).isEmpty());
+    public void petNotFoundById () {
+        assertNull(Pet.find(9999999999999L));
     }
 
-    @Test(expected = UniqueNameException.class)
+    @Test
+    public void petSuccessFoundByOwner () {
+        assertThat(Pet.findAllByUser(savedUser), hasSize(1));
+    }
+
+    @Test(expected = Exception.class)
     public void petWithExistingPasswordFailed () {
-        petService.saveOrUpdatePet(createNewExamplePet.get());
+        createNewExamplePet.get().save();
     }
 }

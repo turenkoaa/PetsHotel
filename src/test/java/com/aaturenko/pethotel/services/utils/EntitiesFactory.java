@@ -1,25 +1,21 @@
 package com.aaturenko.pethotel.services.utils;
 
 import com.aaturenko.pethotel.dto.RequestDto;
+import com.aaturenko.pethotel.entities.Owner;
+import com.aaturenko.pethotel.entities.Pet;
+import com.aaturenko.pethotel.entities.User;
 import com.aaturenko.pethotel.enums.PetType;
-import com.aaturenko.pethotel.enums.UserType;
-import com.aaturenko.pethotel.models.Pet;
-import com.aaturenko.pethotel.models.Request;
-import com.aaturenko.pethotel.models.User;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.function.Supplier;
 
 public class EntitiesFactory {
 
     public static Supplier<User> createNewExampleUser =
-            () -> User.builder()
+            () -> Owner.builder()
                 .firstName("Сомин")
                 .lastName("Игорь")
                 .active(true)
-                .userType(UserType.CUSTOMER)
                 .email("somin@smth.com")
                 .address("Новочеркасская")
                 .build();

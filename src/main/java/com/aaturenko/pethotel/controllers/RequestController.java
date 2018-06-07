@@ -1,12 +1,11 @@
 package com.aaturenko.pethotel.controllers;
 
 import com.aaturenko.pethotel.dto.RequestDto;
-import com.aaturenko.pethotel.models.Request;
-import com.aaturenko.pethotel.models.User;
-import com.aaturenko.pethotel.services.ManageStatusesService;
-import com.aaturenko.pethotel.services.RequestService;
-import com.aaturenko.pethotel.services.UserService;
+import com.aaturenko.pethotel.entities.Owner;
+import com.aaturenko.pethotel.entities.Request;
+import com.aaturenko.pethotel.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,55 +17,66 @@ import java.util.List;
 @RequestMapping("/request")
 public class RequestController {
 
-    private final RequestService requestService;
-    private final ManageStatusesService manageStatusesService;
-
-    @GetMapping("/all-new")
+    @GetMapping("/all-new/{userId}")
     public ResponseEntity<List<Request>> findNewRequests(
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(requestService.findAllNewRequests(page, size));
+            @PathVariable long userId) {
+        return ResponseEntity.ok(Request.findNewRequests(userId));
     }
 
     @GetMapping("/all-by-author/{authorId}")
     public ResponseEntity<List<Request>> findRequestsByAuthor(
-            @PathVariable long authorId,
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(requestService.findAllRequestsByAuthor(authorId, page, size));
+            @PathVariable long authorId) {
+        return ResponseEntity.ok(Owner.find(authorId).requests());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Request> findRequest(
             @PathVariable long id) {
-        return ResponseEntity.ok(requestService.findRequestById(id));
+        return ResponseEntity.ok(Request.find(id));
     }
     @PostMapping("/create")
     public ResponseEntity<Request> createRequest(@RequestBody RequestDto requestDto) {
-        return ResponseEntity.ok(requestService.createRequest(requestDto));
+        return ResponseEntity.ok(Owner.find(requestDto.getUserId()).addRequest(requestDto));
     }
 
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> deleteRequest(@PathVariable long id) {
-        requestService.deleteRequestById(id);
+        Request.find(id).delete();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{id}/anulled")
     public ResponseEntity<?> anulledRequest(@PathVariable long id) {
-        manageStatusesService.anulledRequestAndRejectItsResponses(
-                requestService.findRequestById(id)
-        );
+        Request.find(id).annuled();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
     @PutMapping("/{id}/reject-responses")
     public ResponseEntity<?> rejectAllResponsesForRequest(@PathVariable long id) {
-        manageStatusesService.rejectAllResponsesForRequest(
-                requestService.findRequestById(id)
-        );
+        Request.find(id).rejectResponses();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    @PutMapping("/{id}/accept/{responseId}")
+    public ResponseEntity<?> acceptResponse(@PathVariable long id, @PathVariable long responseId) {
+        Request.find(id).acceptResponse(responseId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Autowired
+    PaymentService paymentService;
+
+    @PutMapping("/{id}/paid")
+    public ResponseEntity<?> paidConfirmed(@PathVariable long id) {
+        Request request = Request.find(id);
+        boolean paymentSuccess = paymentService.pay(request.getUser(), request.getCost());
+        if (paymentSuccess) {
+            request.paidConfirmed();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }
