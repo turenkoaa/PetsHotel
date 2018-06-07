@@ -29,7 +29,7 @@ public class Owner extends User {
 
     public Request addRequest(RequestDto requestDto){
         Request request = Request.newRequest(requestDto, this);
-        requests.add(request);
+        requests().add(request);
         return request;
     }
 
@@ -86,7 +86,7 @@ public class Owner extends User {
             return new Owner(id, firstName, lastName, email, active, address, pets, requests);
         }
 
-        public void setResponses(List<Request> requests) {
+        public void setRequests(List<Request> requests) {
             this.requests = requests;
         }
     }

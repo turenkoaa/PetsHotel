@@ -3,14 +3,14 @@ package com.aaturenko.pethotel.dao.mapper;
 import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.Owner;
 import com.aaturenko.pethotel.entities.Request;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OwnerMapper extends UserMapper{
 
-    public OwnerMapper(Connection dbConnection, boolean useEntitiesCache) {
+    public OwnerMapper(ComboPooledDataSource dbConnection, boolean useEntitiesCache) {
         super(dbConnection, useEntitiesCache);
     }
 

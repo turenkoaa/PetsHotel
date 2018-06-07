@@ -28,9 +28,10 @@ public class DBConnection {
         }
     }
 
-    public static void closeConnection() {
+    public static synchronized void closeConnection() {
+        if (connection == null) return;
         try {
-            getConnection().close();
+            connection.close();
             connection = null;
         } catch (SQLException e) {
             e.printStackTrace();

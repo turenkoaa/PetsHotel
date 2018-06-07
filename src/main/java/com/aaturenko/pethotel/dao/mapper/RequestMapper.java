@@ -4,8 +4,12 @@ import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.entities.*;
 import com.aaturenko.pethotel.enums.RequestStatus;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class RequestMapper extends DataMapper {
@@ -14,7 +18,7 @@ public class RequestMapper extends DataMapper {
     private static final String COLUMNS = "start_date, end_date, status, pet_id, user_id, paid, cost";
     private static final String DDL = "(?, ?, ?, ?, ?, ?, ?, ?)";
 
-    public RequestMapper(Connection connection, boolean useCache) {
+    public RequestMapper(ComboPooledDataSource connection, boolean useCache) {
         super(connection, useCache);
     }
 

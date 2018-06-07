@@ -42,6 +42,7 @@ public class Admin {
             return Review.showDislikedReviews()
                     .stream()
                     .map(Review::getUser)
+                    .filter(User::getActive)
                     .distinct()
                     .collect(toList());
         }

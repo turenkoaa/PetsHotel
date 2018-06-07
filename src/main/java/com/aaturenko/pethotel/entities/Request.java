@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;
 
+import static java.util.stream.Collectors.toList;
+
 @EqualsAndHashCode(callSuper = true)
 public class Request extends Entity {
 
@@ -105,8 +107,12 @@ public class Request extends Entity {
         return requestMapper.findAllByUser(user);
     }
 
-    public static List<Request> findNewRequests() {
-        return requestMapper.findAllByStatus(RequestStatus.NEW);
+    public static List<Request> findNewRequests(long userId) {
+        return requestMapper.findAllByStatus(RequestStatus.NEW)
+                .stream()
+                .filter(r -> userId != r.getUser().getId())
+                .distinct()
+                .collect(toList());
     }
 
     public static Request find(long requestId) {

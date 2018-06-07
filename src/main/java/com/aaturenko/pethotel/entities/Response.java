@@ -142,7 +142,7 @@ public class Response extends Entity {
 
         @Override
         public void reject() {
-            request().setNewStatus();
+            request().annuled();
             changeStatus(REJECTED);
         }
     }

@@ -5,8 +5,8 @@ import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.Pet;
 import com.aaturenko.pethotel.entities.User;
 import com.aaturenko.pethotel.enums.PetType;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ public class PetMapper extends DataMapper {
     private static final String COLUMNS = "pet_type, name, age, passport, user_id";
     private static final String DDL = "(?, ?, ?, ?, ?, ?)";
 
-    public PetMapper(Connection dbConnection, boolean useEntitiesCache) {
+    public PetMapper(ComboPooledDataSource dbConnection, boolean useEntitiesCache) {
         super(dbConnection, useEntitiesCache);
     }
 

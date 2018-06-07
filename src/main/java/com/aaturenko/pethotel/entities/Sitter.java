@@ -60,6 +60,6 @@ public class Sitter extends User {
     }
 
     public List<Request> findNewRequests() {
-        return Request.findNewRequests();
+        return Request.findNewRequests(this.id);
     }
 }

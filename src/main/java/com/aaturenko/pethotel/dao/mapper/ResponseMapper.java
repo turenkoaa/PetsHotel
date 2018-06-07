@@ -4,8 +4,8 @@ import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.entities.*;
 import com.aaturenko.pethotel.enums.ResponseStatus;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ public class ResponseMapper extends DataMapper {
     private static final String COLUMNS = "status, details, request_id, user_id, cost";
     private static final String DDL = "(?, ?, ?, ?, ?, ?)";
 
-    public ResponseMapper(Connection connection, boolean useCache) {
+    public ResponseMapper(ComboPooledDataSource connection, boolean useCache) {
         super(connection, useCache);
     }
 

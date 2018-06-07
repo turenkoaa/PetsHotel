@@ -1,6 +1,7 @@
 package com.aaturenko.pethotel.dao;
 
 import com.aaturenko.pethotel.entities.Entity;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public abstract class DataMapper {
 
-    private final Connection dbConnection;
+    private final ComboPooledDataSource connectionPool;
     private final boolean useEntitiesCache;
     private Map<Long, Entity> entitiesCache = new HashMap<>();
 
@@ -62,18 +63,18 @@ public abstract class DataMapper {
     public Entity findById(final Long id) {
         return useEntitiesCache && entitiesCache.containsKey(id)
                     ? entitiesCache.get(id)
-                    : tryToFindById(dbConnection, id);
+                    : tryToFindById(id);
     }
 
-    private Entity tryToFindById(final Connection conn, final Long id) {
+    private Entity tryToFindById(Long id) {
         Entity object;
-        try (PreparedStatement findStatement = conn.prepareStatement(getReadQuery())) {
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement findStatement = conn.prepareStatement(getReadQuery())) {
             findStatement.setLong(1, id);
             ResultSet rs = findStatement.executeQuery();
             object = load(rs);
             rs.close();
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
 
@@ -91,18 +92,18 @@ public abstract class DataMapper {
     }
 
     private void insert(final Entity entity) {
-        try (PreparedStatement insertStatement = dbConnection.prepareStatement(getCreateQuery())){
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement insertStatement = conn.prepareStatement(getCreateQuery())){
             log.info("QUERY: {}", getCreateQuery());
             doInsert(entity, insertStatement);
             insertStatement.executeUpdate();
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
     }
 
     public Entity save(final Entity entity) {
-        final Entity existingObject = tryToFindById(dbConnection, entity.getId());
+        final Entity existingObject = tryToFindById(entity.getId());
         if (existingObject == null) {
             Entity newEntity = null;
             long maxId = getMaxId() + 1;
@@ -121,24 +122,24 @@ public abstract class DataMapper {
     private long getMaxId()  {
         long maxId = 0;
         String sql = "select max(" + getPrimaryKeyColumnName() + ") as max from " + getTableName();
-        try (PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 maxId = resultSet.getLong("max");
             }
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
         return maxId;
     }
 
     private Entity update(final Entity entity) {
-        try (PreparedStatement updateStatement = dbConnection.prepareStatement(getUpdateQuery())) {
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement updateStatement = conn.prepareStatement(getUpdateQuery())) {
             doUpdate(entity, updateStatement);
             updateStatement.execute();
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
         if (useEntitiesCache) entitiesCache.put(entity.getId(), entity);
@@ -147,12 +148,12 @@ public abstract class DataMapper {
     }
 
     public void delete(final Entity object) {
-        try (final PreparedStatement deleteStatement = dbConnection.prepareStatement(getDeleteQuery())) {
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement deleteStatement = conn.prepareStatement(getDeleteQuery())) {
             deleteStatement.setLong(1, object.getId());
             deleteStatement.execute();
             if (useEntitiesCache) entitiesCache.remove(object.getId());
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
     }
@@ -161,13 +162,13 @@ public abstract class DataMapper {
         final String query = "SELECT " + getPrimaryKeyColumnName() + " FROM " + getTableName() + " WHERE " + whereClause;
         final List<Entity> results = new ArrayList<>();
 
-        try (PreparedStatement findStatement = prepareCustomStatement(dbConnection, query, args)) {
+        try (Connection conn = connectionPool.getConnection()) {
+            PreparedStatement findStatement = prepareCustomStatement(conn, query, args);
             final ResultSet rs = findStatement.executeQuery();
             while (rs.next()) {
                 results.add(findById(rs.getLong(1)));
             }
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
         return results;
@@ -177,13 +178,13 @@ public abstract class DataMapper {
         final String query = "SELECT " + getPrimaryKeyColumnName() + " FROM " + getTableName();
         final List<Entity> results = new ArrayList<>();
 
-        try (PreparedStatement findStatement = dbConnection.prepareStatement(query)) {
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement findStatement = conn.prepareStatement(query)) {
             final ResultSet rs = findStatement.executeQuery();
             while (rs.next()) {
                 results.add(findById(rs.getLong(1)));
             }
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
         return results;
@@ -202,7 +203,8 @@ public abstract class DataMapper {
                 "SELECT " + getTableName() + "." + getPrimaryKeyColumnName() + " FROM " + tableName + " WHERE " + whereClause;
 
         log.info("QUERY: {}", query);
-        try (PreparedStatement findStatement = prepareCustomStatement(dbConnection, query, args)) {
+        try (Connection conn = connectionPool.getConnection();
+             PreparedStatement findStatement = prepareCustomStatement(conn, query, args)) {
             ResultSet rs = findStatement.executeQuery();
             if (rs.next()) {
                 return findById(rs.getLong(1));
@@ -210,7 +212,6 @@ public abstract class DataMapper {
                 return null;
             }
         } catch (SQLException e) {
-            DBConnection.closeConnection();
             throw new RuntimeException(e);
         }
     }

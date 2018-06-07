@@ -5,8 +5,8 @@ import com.aaturenko.pethotel.dao.DataMapperRegistry;
 import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.Review;
 import com.aaturenko.pethotel.entities.User;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +19,7 @@ public class ReviewMapper extends DataMapper {
     private static final String DDL = "(?, ?, ?, ?)";
 
 
-    public ReviewMapper(Connection connection, boolean useCache) {
+    public ReviewMapper(ComboPooledDataSource connection, boolean useCache) {
         super(connection, useCache);
     }
 

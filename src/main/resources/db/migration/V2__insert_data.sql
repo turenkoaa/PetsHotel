@@ -47,3 +47,11 @@ INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_
 INSERT INTO `response` (`response_id`, `status`, `details`, `request_id`, `user_id`, `cost`) VALUES (3, 'REJECTED', NULL, 3, 6, 1800);
 
 COMMIT;
+
+START TRANSACTION;
+INSERT INTO `review` (`review_id`, `like`, `comment`, `user_id`) VALUES (1, 0, 'doesnt like', 1);
+INSERT INTO `review` (`review_id`, `like`, `comment`, `user_id`) VALUES (2, 1, 'good', 2);
+INSERT INTO `review` (`review_id`, `like`, `comment`, `user_id`) VALUES (3, 0, 'fail', 3);
+
+COMMIT;
+

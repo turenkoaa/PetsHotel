@@ -17,9 +17,10 @@ import java.util.List;
 @RequestMapping("/request")
 public class RequestController {
 
-    @GetMapping("/all-new")
-    public ResponseEntity<List<Request>> findNewRequests() {
-        return ResponseEntity.ok(Request.findNewRequests());
+    @GetMapping("/all-new/{userId}")
+    public ResponseEntity<List<Request>> findNewRequests(
+            @PathVariable long userId) {
+        return ResponseEntity.ok(Request.findNewRequests(userId));
     }
 
     @GetMapping("/all-by-author/{authorId}")

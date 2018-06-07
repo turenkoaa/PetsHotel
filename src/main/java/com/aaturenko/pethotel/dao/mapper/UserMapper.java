@@ -3,8 +3,8 @@ package com.aaturenko.pethotel.dao.mapper;
 import com.aaturenko.pethotel.dao.DataMapper;
 import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.User;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public abstract class UserMapper extends DataMapper {
     private static final String COLUMNS = "first_name, last_name, email, address, active";
     private static final String DDL = "(?, ?, ?, ?, ?, ?)";
 
-    public UserMapper(Connection dbConnection, boolean useEntitiesCache) {
+    public UserMapper(ComboPooledDataSource dbConnection, boolean useEntitiesCache) {
         super(dbConnection, useEntitiesCache);
     }
 
@@ -39,7 +39,6 @@ public abstract class UserMapper extends DataMapper {
         st.setString(++i, user.getEmail());
         st.setString(++i, user.getAddress());
         st.setBoolean(++i, user.getActive());
-        st.setLong(++i, user.getId());
         return i;
     }
 

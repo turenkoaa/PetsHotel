@@ -2,14 +2,14 @@ package com.aaturenko.pethotel.dao.mapper;
 
 import com.aaturenko.pethotel.entities.Entity;
 import com.aaturenko.pethotel.entities.Sitter;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SitterMapper extends UserMapper {
 
-    public SitterMapper(Connection dbConnection, boolean useEntitiesCache) {
+    public SitterMapper(ComboPooledDataSource dbConnection, boolean useEntitiesCache) {
         super(dbConnection, useEntitiesCache);
     }
 
