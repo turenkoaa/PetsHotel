@@ -1,8 +1,8 @@
 package com.aaturenko.pethotel.services;
 
 import com.aaturenko.pethotel.dto.PetDto;
-import com.aaturenko.pethotel.entities.Pet;
-import com.aaturenko.pethotel.entities.User;
+import com.aaturenko.pethotel.old.entities.Pet;
+import com.aaturenko.pethotel.old.entities.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

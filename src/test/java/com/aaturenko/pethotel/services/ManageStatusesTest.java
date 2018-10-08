@@ -1,9 +1,9 @@
 package com.aaturenko.pethotel.services;
 
 import com.aaturenko.pethotel.dto.ResponseDto;
-import com.aaturenko.pethotel.entities.Request;
-import com.aaturenko.pethotel.entities.Response;
-import com.aaturenko.pethotel.entities.User;
+import com.aaturenko.pethotel.old.entities.Request;
+import com.aaturenko.pethotel.old.entities.Response;
+import com.aaturenko.pethotel.old.entities.User;
 import com.aaturenko.pethotel.exceptions.EntityNotFoundException;
 import org.junit.After;
 import org.junit.Before;

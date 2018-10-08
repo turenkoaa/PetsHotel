@@ -1,9 +1,9 @@
 package com.aaturenko.pethotel.services.utils;
 
 import com.aaturenko.pethotel.dto.RequestDto;
-import com.aaturenko.pethotel.entities.Owner;
-import com.aaturenko.pethotel.entities.Pet;
-import com.aaturenko.pethotel.entities.User;
+import com.aaturenko.pethotel.old.entities.Owner;
+import com.aaturenko.pethotel.old.entities.Pet;
+import com.aaturenko.pethotel.old.entities.User;
 import com.aaturenko.pethotel.enums.PetType;
 
 import java.time.LocalDate;

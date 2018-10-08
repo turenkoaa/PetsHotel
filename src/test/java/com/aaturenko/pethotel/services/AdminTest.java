@@ -1,8 +1,8 @@
 package com.aaturenko.pethotel.services;
 
-import com.aaturenko.pethotel.entities.Admin;
-import com.aaturenko.pethotel.entities.Request;
-import com.aaturenko.pethotel.entities.User;
+import com.aaturenko.pethotel.old.entities.Admin;
+import com.aaturenko.pethotel.old.entities.Request;
+import com.aaturenko.pethotel.old.entities.User;
 import org.junit.Test;
 
 import static com.aaturenko.pethotel.enums.RequestStatus.NEW;

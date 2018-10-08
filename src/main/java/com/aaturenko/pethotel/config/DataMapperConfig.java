@@ -1,14 +1,13 @@
 package com.aaturenko.pethotel.config;
 
-import com.aaturenko.pethotel.dao.DataMapperRegistry;
+import com.aaturenko.pethotel.old.dao.DataMapperRegistry;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.beans.PropertyVetoException;
 
-@Configuration
+//@Configuration
 public class DataMapperConfig {
 
     @Value("${spring.datasource.username}")
